@@ -1,0 +1,589 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>math_8</title>
+</head>
+
+<body>
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>資訊數學｜下載速度即時監控</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  font-family: Arial, "Microsoft JhengHei", sans-serif;
+  background: #f0f4f9;
+  color: #243247;
+  line-height: 1.7;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+header {
+  background: #204d87;
+  color: white;
+  padding: 25px;
+  border-radius: 16px;
+}
+
+header h1 {
+  margin-top: 0;
+}
+
+.card {
+  background: white;
+  padding: 22px;
+  margin-top: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px #2432470d;
+}
+
+h2 {
+  color: #2459a9;
+  margin-top: 0;
+}
+
+.formula {
+  background: #eaf2ff;
+  border-radius: 10px;
+  text-align: center;
+  padding: 16px;
+  font-size: 25px;
+  font-weight: bold;
+  margin: 16px 0;
+}
+
+.file-box {
+  background: #f7f9fc;
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.progress {
+  height: 12px;
+  background: #dce5f1;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #3478d4;
+  transition: width 0.2s;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.metric {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  padding: 18px;
+  background: #fbfcfe;
+}
+
+.metric-label {
+  font-size: 14px;
+  color: #68778d;
+}
+
+.metric-value {
+  font-size: clamp(23px, 4vw, 30px);
+  font-weight: bold;
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+}
+
+.blue {
+  color: #2459a9;
+}
+
+.red {
+  color: #cf453e;
+}
+
+.green {
+  color: #198754;
+}
+
+.muted {
+  color: #68778d;
+  font-size: 14px;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin: 20px 0 5px;
+  accent-color: #2459a9;
+  cursor: pointer;
+}
+
+.time-display {
+  font-size: 25px;
+  font-weight: bold;
+  color: #2459a9;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  background: #2459a9;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  margin: 5px 5px 5px 0;
+}
+
+button:hover {
+  background: #173e79;
+}
+
+.compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.compare-box {
+  background: #f7f9fc;
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.result {
+  padding: 15px;
+  background: #eaf7ef;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+.question {
+  padding: 15px;
+  background: #fff8e7;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+
+select {
+  padding: 10px;
+  border: 1px solid #bdc9d9;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+footer {
+  text-align: center;
+  color: #68778d;
+  font-size: 13px;
+  padding: 22px 0;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+
+  .dashboard,
+  .compare {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 17px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <p>資訊數學｜指數函數與微分</p>
+  <h1>📡 下載速度即時監控中心</h1>
+  <p>
+    你正在下載一個大型檔案。請調整下載時間，
+    觀察下載速度與速度變化率如何改變。
+  </p>
+</header>
+
+<section class="card">
+  <h2>一、任務情境</h2>
+
+  <div class="file-box">
+    <div style="font-size:35px">📦</div>
+    <strong>大型檔案.zip</strong>
+    <p class="muted">模擬下載狀態</p>
+
+    <div class="progress">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <p id="progressText" class="muted">模擬時間：0 秒</p>
+  </div>
+
+  <p>本題使用以下簡化模型描述下載速度：</p>
+
+  <div class="formula">
+    S(t) = 80e<sup>−0.1t</sup>
+  </div>
+
+  <p>
+    S(t)：下載速度，單位 MB/s。<br>
+    t：開始下載後經過的秒數。
+  </p>
+
+  <p class="muted">
+    注意：這是教學用數學模型，不代表所有真實下載都遵循此規律。
+    進度條僅用來表示模擬時間，不代表真實檔案下載完成百分比。
+  </p>
+</section>
+
+<section class="card">
+  <h2>二、先完成微分挑戰</h2>
+
+  <p>請先求出 S(t) 的導數。</p>
+
+  <div class="formula">
+    S'(t) = ______ × e<sup>−0.1t</sup>
+  </div>
+
+  <label for="answer">請輸入導數前面的係數：</label>
+  <input
+    id="answer"
+    type="number"
+    step="any"
+    placeholder="例如 -8"
+    style="padding:10px; width:100%; max-width:300px; font-size:16px"
+  >
+
+  <p>
+    <button onclick="checkAnswer()">檢查答案</button>
+  </p>
+
+  <div id="feedback" class="muted"></div>
+
+  <div id="unlock" style="display:none">
+    <div class="result">
+      <strong>🎉 答對了！</strong>
+      <p>你已解鎖即時監控儀表板。試著調整時間，觀察數值變化。</p>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard" class="card" style="display:none">
+  <h2>三、即時監控儀表板</h2>
+
+  <p>拖曳下方滑桿，改變模擬時間。</p>
+
+  <div class="time-display">
+    目前時間：<span id="timeValue">5</span> 秒
+  </div>
+
+  <input
+    type="range"
+    id="timeSlider"
+    min="0"
+    max="30"
+    step="1"
+    value="5"
+    oninput="updateDashboard()"
+  >
+
+  <div style="display:flex; justify-content:space-between" class="muted">
+    <span>0 秒</span>
+    <span>15 秒</span>
+    <span>30 秒</span>
+  </div>
+
+  <div>
+    <button onclick="setTime(0)">0 秒</button>
+    <button onclick="setTime(5)">5 秒</button>
+    <button onclick="setTime(10)">10 秒</button>
+    <button onclick="setTime(20)">20 秒</button>
+    <button onclick="setTime(30)">30 秒</button>
+  </div>
+
+  <div class="dashboard">
+    <div class="metric">
+      <div class="metric-label">目前下載速度 S(t)</div>
+      <div id="speed" class="metric-value blue">—</div>
+      <div class="muted">MB/s</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-label">瞬時變化率 S'(t)</div>
+      <div id="derivative" class="metric-value red">—</div>
+      <div class="muted">MB/s²</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-label">變化方向</div>
+      <div id="direction" class="metric-value">—</div>
+      <div id="directionDescription" class="muted"></div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-label">相較於前一秒</div>
+      <div id="difference" class="metric-value">—</div>
+      <div class="muted">MB/s 的速度差</div>
+    </div>
+  </div>
+
+  <div class="result">
+    <strong>📋 系統分析</strong>
+    <p id="analysisText">調整時間以查看分析。</p>
+  </div>
+</section>
+
+<section id="comparison" class="card" style="display:none">
+  <h2>四、比較不同時間的結果</h2>
+
+  <p>
+    選擇兩個時間點，看看下載速度與變化率有什麼差異。
+  </p>
+
+  <div class="compare">
+    <div class="compare-box">
+      <label for="timeA">時間 A</label>
+      <select id="timeA" onchange="compareTimes()">
+        <option value="0">0 秒</option>
+        <option value="5" selected>5 秒</option>
+        <option value="10">10 秒</option>
+        <option value="15">15 秒</option>
+        <option value="20">20 秒</option>
+        <option value="25">25 秒</option>
+        <option value="30">30 秒</option>
+      </select>
+      <p>下載速度：<strong id="speedA">—</strong></p>
+      <p>瞬時變化率：<strong id="rateA">—</strong></p>
+    </div>
+
+    <div class="compare-box">
+      <label for="timeB">時間 B</label>
+      <select id="timeB" onchange="compareTimes()">
+        <option value="0">0 秒</option>
+        <option value="5">5 秒</option>
+        <option value="10">10 秒</option>
+        <option value="15">15 秒</option>
+        <option value="20" selected>20 秒</option>
+        <option value="25">25 秒</option>
+        <option value="30">30 秒</option>
+      </select>
+      <p>下載速度：<strong id="speedB">—</strong></p>
+      <p>瞬時變化率：<strong id="rateB">—</strong></p>
+    </div>
+  </div>
+
+  <div class="result">
+    <strong>比較結果</strong>
+    <p id="compareText">—</p>
+  </div>
+</section>
+
+<section id="questions" class="card" style="display:none">
+  <h2>五、任務思考題</h2>
+
+  <div class="question">
+    <strong>問題 1：</strong>
+    當時間從 5 秒增加到 20 秒，下載速度變快還是變慢？
+  </div>
+
+  <div class="question">
+    <strong>問題 2：</strong>
+    為什麼瞬時變化率是負數？
+  </div>
+
+  <div class="question">
+    <strong>問題 3：</strong>
+    當時間越來越久，下載速度仍然下降，但變化率的絕對值卻越來越小。這代表什麼？
+  </div>
+
+  <details style="margin-top:16px">
+    <summary>查看參考答案</summary>
+    <ol>
+      <li>下載速度變慢。</li>
+      <li>因為下載速度函數隨時間遞減，所以導數為負數。</li>
+      <li>速度仍在下降，但下降得越來越慢；導數逐漸接近 0。</li>
+    </ol>
+  </details>
+</section>
+
+<footer>
+  指數微分互動教材｜不需安裝額外套件
+</footer>
+
+</div>
+
+<script>
+function speedAt(t) {
+  return 80 * Math.exp(-0.1 * t);
+}
+
+function derivativeAt(t) {
+  return -8 * Math.exp(-0.1 * t);
+}
+
+function checkAnswer() {
+  const input = document.getElementById("answer").value;
+  const feedback = document.getElementById("feedback");
+
+  if (input.trim() === "") {
+    feedback.textContent = "請先輸入答案。";
+    feedback.style.color = "#c0392b";
+    return;
+  }
+
+  if (Math.abs(Number(input) + 8) < 0.01) {
+    feedback.textContent = "正確！80 × (−0.1) = −8。";
+    feedback.style.color = "#198754";
+
+    document.getElementById("unlock").style.display = "block";
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("comparison").style.display = "block";
+    document.getElementById("questions").style.display = "block";
+
+    updateDashboard();
+    compareTimes();
+
+    document.getElementById("dashboard").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  } else {
+    feedback.textContent = "再想一想：指數部分微分後，要乘上多少？";
+    feedback.style.color = "#c0392b";
+  }
+}
+
+function setTime(t) {
+  document.getElementById("timeSlider").value = t;
+  updateDashboard();
+}
+
+function updateDashboard() {
+  const t = Number(document.getElementById("timeSlider").value);
+  const speed = speedAt(t);
+  const derivative = derivativeAt(t);
+  const previousSpeed = t > 0 ? speedAt(t - 1) : null;
+  const difference = previousSpeed === null ? null : speed - previousSpeed;
+
+  document.getElementById("timeValue").textContent = t;
+  document.getElementById("speed").textContent = speed.toFixed(3);
+  document.getElementById("derivative").textContent =
+    derivative.toFixed(3);
+
+  document.getElementById("progressBar").style.width =
+    (t / 30 * 100) + "%";
+
+  document.getElementById("progressText").textContent =
+    "模擬時間：" + t + " 秒（非真實下載進度）";
+
+  document.getElementById("difference").textContent =
+    difference === null ? "—" : difference.toFixed(3);
+
+  document.getElementById("direction").textContent =
+    derivative < 0 ? "↓ 下降" : derivative > 0 ? "↑ 上升" : "持平";
+
+  document.getElementById("directionDescription").textContent =
+    derivative < 0 ? "下載速度正在減少" :
+    derivative > 0 ? "下載速度正在增加" : "下載速度沒有改變";
+
+  let analysis = "";
+
+  if (t === 0) {
+    analysis =
+      "剛開始時，下載速度為 80 MB/s。此刻導數為 −8 MB/s²，" +
+      "代表在模型起點附近，下載速度下降得最快。";
+  } else if (t < 10) {
+    analysis =
+      "目前下載速度仍在下降。瞬時變化率為負數，" +
+      "且相較於較晚的時間點，下降幅度通常較大。";
+  } else if (t < 20) {
+    analysis =
+      "下載速度比剛開始時低。導數仍為負數，但絕對值已經變小，" +
+      "表示速度持續下降，只是下降得比較慢。";
+  } else {
+    analysis =
+      "目前下載速度已比一開始低很多。導數仍為負數並逐漸接近 0，" +
+      "表示速度仍下降，但下降的幅度越來越小。";
+  }
+
+  document.getElementById("analysisText").textContent = analysis;
+}
+
+function compareTimes() {
+  const a = Number(document.getElementById("timeA").value);
+  const b = Number(document.getElementById("timeB").value);
+
+  const speedA = speedAt(a);
+  const speedB = speedAt(b);
+  const rateA = derivativeAt(a);
+  const rateB = derivativeAt(b);
+
+  document.getElementById("speedA").textContent =
+    speedA.toFixed(3) + " MB/s";
+  document.getElementById("rateA").textContent =
+    rateA.toFixed(3) + " MB/s²";
+
+  document.getElementById("speedB").textContent =
+    speedB.toFixed(3) + " MB/s";
+  document.getElementById("rateB").textContent =
+    rateB.toFixed(3) + " MB/s²";
+
+  let text = "";
+
+  if (a === b) {
+    text = "兩個時間點相同，因此下載速度與瞬時變化率也相同。";
+  } else {
+    const earlier = Math.min(a, b);
+    const later = Math.max(a, b);
+    const earlierSpeed = speedAt(earlier);
+    const laterSpeed = speedAt(later);
+    const earlierRate = derivativeAt(earlier);
+    const laterRate = derivativeAt(later);
+
+    text =
+      "從 " + earlier + " 秒到 " + later + " 秒，下載速度由 " +
+      earlierSpeed.toFixed(3) + " MB/s 變為 " +
+      laterSpeed.toFixed(3) + " MB/s。";
+
+    text +=
+      "瞬時變化率由 " + earlierRate.toFixed(3) +
+      " MB/s² 變為 " + laterRate.toFixed(3) +
+      " MB/s²。速度仍在下降，但導數的絕對值變小，" +
+      "代表下降幅度逐漸變小。";
+  }
+
+  document.getElementById("compareText").textContent = text;
+}
+</script>
+</body>
+</html>
+
+</body>
+</html>
