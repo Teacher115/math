@@ -1,0 +1,383 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>math_6</title>
+</head>
+
+<body>
+
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>指數微分實境任務：檔案下載速度</title>
+  <style>
+    :root {
+      --blue: #2459a9;
+      --blue-light: #edf4ff;
+      --red: #d94d45;
+      --green: #18794e;
+      --ink: #203047;
+      --muted: #637189;
+      --line: #dbe3ef;
+      --paper: #ffffff;
+      --bg: #f3f6fb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, "Microsoft JhengHei", sans-serif;
+      line-height: 1.7;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .hero {
+      padding: 28px;
+      border-radius: 18px;
+      color: white;
+      background: linear-gradient(125deg, #193f78, #3776c9);
+      box-shadow: 0 8px 22px #1e47751c;
+    }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(25px, 4vw, 34px); }
+    .hero p { margin: 8px 0; }
+    .tag {
+      display: inline-block; padding: 4px 10px; border-radius: 99px;
+      background: #ffffff24; font-size: 13px; margin-bottom: 8px;
+    }
+    .card {
+      margin-top: 20px; padding: 24px; background: var(--paper);
+      border: 1px solid var(--line); border-radius: 16px;
+      box-shadow: 0 4px 14px #20304708;
+    }
+    h2 { margin: 0 0 12px; font-size: 22px; color: var(--blue); }
+    h3 { margin-bottom: 6px; }
+    .formula {
+      padding: 16px; margin: 14px 0; border-radius: 12px;
+      background: var(--blue-light); text-align: center;
+      font-size: clamp(20px, 3vw, 26px); font-weight: 700;
+    }
+    .scenario {
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px;
+      align-items: center;
+    }
+    .download-illustration {
+      padding: 18px; border-radius: 14px; background: #f6f9fe;
+      border: 1px solid var(--line);
+    }
+    .file-icon { font-size: 40px; }
+    .progress-track { height: 12px; border-radius: 20px; background: #dfe8f5; overflow: hidden; }
+    .progress-bar { width: 38%; height: 100%; background: #3776c9; border-radius: inherit; }
+    .small { color: var(--muted); font-size: 14px; }
+    label { display: block; margin-top: 14px; font-weight: 700; }
+    input[type="number"] {
+      width: 100%; max-width: 360px; padding: 11px 12px; margin-top: 5px;
+      border: 1px solid #b8c5d8; border-radius: 8px; font-size: 16px;
+    }
+    button {
+      border: 0; border-radius: 9px; padding: 11px 18px; margin-top: 16px;
+      background: var(--blue); color: white; font-size: 16px; cursor: pointer;
+    }
+    button:hover { filter: brightness(.92); }
+    .message { display: none; padding: 12px; margin-top: 14px; border-radius: 9px; }
+    .success { display: block; color: #145b38; background: #e6f7ed; }
+    .error { display: block; color: #9c302a; background: #fff0ed; }
+    .hidden { display: none !important; }
+    .stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0;
+    }
+    .stat {
+      padding: 15px; background: #f7f9fc; border: 1px solid var(--line);
+      border-radius: 12px; min-width: 0;
+    }
+    .stat .label { color: var(--muted); font-size: 14px; }
+    .stat .value { font-size: clamp(19px, 3vw, 25px); font-weight: 700; margin-top: 4px; overflow-wrap: anywhere; }
+    .blue { color: var(--blue); }
+    .red { color: var(--red); }
+    .green { color: var(--green); }
+    input[type="range"] { width: 100%; accent-color: var(--blue); cursor: pointer; }
+    .range-labels { display: flex; justify-content: space-between; color: var(--muted); font-size: 13px; }
+    canvas {
+      display: block; width: 100%; height: 330px; margin-top: 16px;
+      border: 1px solid var(--line); border-radius: 12px; background: #fff;
+    }
+    .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 10px; font-size: 14px; }
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+    .insight { background: #fff8e8; border: 1px solid #f3e1b4; padding: 15px; border-radius: 12px; }
+    details { margin-top: 16px; padding: 13px; background: #f7f9fc; border-radius: 10px; }
+    summary { cursor: pointer; font-weight: 700; }
+    .question { padding: 14px; border-left: 4px solid #3776c9; background: #f5f8ff; border-radius: 8px; margin: 12px 0; }
+    .footer { text-align: center; color: var(--muted); font-size: 13px; padding: 22px 0; }
+    @media (max-width: 700px) {
+      body { padding: 12px; }
+      .card, .hero { padding: 18px; }
+      .scenario { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+      canvas { height: 290px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header class="hero">
+    <span class="tag">資訊數學｜指數函數與微分</span>
+    <h1>任務：為什麼下載速度越來越慢？</h1>
+    <p>你正在下載一個大型檔案。剛開始下載時速度很快，過了一段時間後，速度卻逐漸下降。</p>
+    <p><strong>你的任務：</strong>用微分找出下載速度正在如何變化，再調整時間，觀察數學模型告訴我們什麼。</p>
+  </header>
+
+  <section class="card">
+    <h2>第一站｜認識下載情境</h2>
+    <div class="scenario">
+      <div>
+        <p>假設某次下載的速度可以用以下簡化模型表示：</p>
+        <div class="formula">S(t) = 80e<sup>−0.1t</sup></div>
+        <p><strong>S(t)</strong>：第 t 秒的下載速度，單位為 MB/s。</p>
+        <p><strong>t</strong>：開始下載後經過的秒數。</p>
+        <p class="small">這是一個用來練習微分的簡化模型；真實下載速度也會受到網路壅塞、伺服器與 Wi-Fi 訊號等因素影響。</p>
+      </div>
+      <div class="download-illustration">
+        <div class="file-icon">📦</div>
+        <strong>大型檔案.zip</strong>
+        <p class="small">正在下載……</p>
+        <div class="progress-track"><div class="progress-bar"></div></div>
+        <p class="small">想一想：怎麼知道速度下降得有多快？</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>第二站｜先解題，才能啟動模擬器</h2>
+    <p>請先求出下載速度的導數，再計算開始下載後第 10 秒的瞬時變化率。</p>
+    <label for="coefficient">1. S'(t) 前面的係數是多少？</label>
+    <input id="coefficient" type="number" step="any" placeholder="輸入係數，例如 -8">
+    <label for="rate">2. S'(10) 約等於多少？</label>
+    <input id="rate" type="number" step="any" placeholder="四捨五入至小數點後三位">
+    <p class="small">提示： (e<sup>u</sup>)' = e<sup>u</sup> × u'，而 e<sup>−1</sup> ≈ 0.367879。</p>
+    <button type="button" onclick="checkAnswer()">檢查答案並解鎖</button>
+    <div id="message" class="message" aria-live="polite"></div>
+    <details>
+      <summary>我需要多一點提示</summary>
+      <p>先對指數部分 −0.1t 微分，得到 −0.1，再乘上原本的 80 與指數函數。</p>
+      <p>接著把 t = 10 代入導數，注意指數 −0.1 × 10 = −1。</p>
+    </details>
+  </section>
+
+  <section id="simulator" class="card hidden">
+    <h2>第三站｜自己調整時間，觀察下載速度</h2>
+    <p>拖曳滑桿，模擬下載開始後不同時間的情況。觀察藍色的下載速度，以及紅色的速度變化率。</p>
+    <label for="timeSlider">經過時間：<span id="timeLabel">10</span> 秒</label>
+    <input id="timeSlider" type="range" min="0" max="30" step="1" value="10" oninput="updateSimulation()">
+    <div class="range-labels"><span>0 秒（剛開始）</span><span>30 秒</span></div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="label">目前下載速度 S(t)</div>
+        <div class="value blue" id="speedValue">29.431 MB/s</div>
+      </div>
+      <div class="stat">
+        <div class="label">瞬時變化率 S'(t)</div>
+        <div class="value red" id="derivativeValue">−2.943 MB/s²</div>
+      </div>
+      <div class="stat">
+        <div class="label">相較於前一秒的速度變化</div>
+        <div class="value" id="changeValue">計算中</div>
+        <div class="small">S(t) − S(t−1)，不是瞬時變化率</div>
+      </div>
+    </div>
+
+    <canvas id="chart" aria-label="下載速度與瞬時變化率隨時間變化的圖表"></canvas>
+    <div class="legend">
+      <span><i class="dot" style="background:#2878d0"></i>下載速度 S(t)</span>
+      <span><i class="dot" style="background:#d94d45"></i>瞬時變化率 S'(t)</span>
+      <span><i class="dot" style="background:#34445e"></i>目前選取的時間</span>
+    </div>
+    <p class="small">為了讓兩條曲線都容易看見，圖表中的兩條曲線使用各自的垂直刻度；因此不要直接用圖上的高度比較它們的數值大小。</p>
+
+    <div class="insight" id="interpretation">
+      <strong>觀察解讀：</strong>目前下載速度正在下降。
+    </div>
+  </section>
+
+  <section id="reflection" class="card hidden">
+    <h2>第四站｜把圖形變成理解</h2>
+    <div class="question">
+      <strong>問題 1：</strong>把時間從 5 秒調到 20 秒，下載速度是變快還是變慢？
+    </div>
+    <div class="question">
+      <strong>問題 2：</strong>隨著時間增加，S'(t) 的數值會逐漸接近 0，還是離 0 越來越遠？
+    </div>
+    <div class="question">
+      <strong>問題 3：</strong>如果 S'(t) 是負數，代表什麼？如果它是正數，又可能代表什麼？
+    </div>
+    <details>
+      <summary>查看參考想法</summary>
+      <ul>
+        <li>在這個模型中，時間越久，下載速度越低。</li>
+        <li>S'(t) 一直是負數，但其絕對值逐漸變小，表示速度仍在下降，只是下降的幅度逐漸變小。</li>
+        <li>導數為負通常表示函數正在下降；導數為正通常表示函數正在上升。</li>
+      </ul>
+      <p>提醒：這些結論是針對本題的數學模型，不代表所有真實下載都會如此變化。</p>
+    </details>
+  </section>
+
+  <div class="footer">互動練習｜指數函數微分 × 生活情境</div>
+</div>
+
+<script>
+  function checkAnswer() {
+    const coefficientInput = document.getElementById("coefficient").value.trim();
+    const rateInput = document.getElementById("rate").value.trim();
+    const message = document.getElementById("message");
+    const simulator = document.getElementById("simulator");
+    const reflection = document.getElementById("reflection");
+
+    if (coefficientInput === "" || rateInput === "") {
+      showMessage("請先填寫兩個答案，再提交。", false);
+      return;
+    }
+
+    const coefficient = Number(coefficientInput);
+    const rate = Number(rateInput);
+    const coefficientCorrect = Math.abs(coefficient + 8) < 0.01;
+    const rateCorrect = Math.abs(rate - (-2.943)) < 0.005;
+
+    if (coefficientCorrect && rateCorrect) {
+      showMessage("答對了！模擬器已解鎖。現在試著改變時間，觀察數值如何變化。", true);
+      simulator.classList.remove("hidden");
+      reflection.classList.remove("hidden");
+      updateSimulation();
+      simulator.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      simulator.classList.add("hidden");
+      reflection.classList.add("hidden");
+      let hint = "還差一點，請再檢查一次。";
+      if (!coefficientCorrect) hint += " 導數的係數不正確。";
+      if (!rateCorrect) hint += " 請重新計算 S'(10)，並四捨五入到小數點後三位。";
+      showMessage(hint, false);
+    }
+  }
+
+  function showMessage(text, correct) {
+    const message = document.getElementById("message");
+    message.textContent = text;
+    message.className = "message " + (correct ? "success" : "error");
+  }
+
+  function updateSimulation() {
+    const t = Number(document.getElementById("timeSlider").value);
+    const speed = 80 * Math.exp(-0.1 * t);
+    const derivative = -8 * Math.exp(-0.1 * t);
+    const previousSpeed = t > 0 ? 80 * Math.exp(-0.1 * (t - 1)) : null;
+    const change = previousSpeed === null ? null : speed - previousSpeed;
+
+    document.getElementById("timeLabel").textContent = t;
+    document.getElementById("speedValue").textContent = speed.toFixed(3) + " MB/s";
+    document.getElementById("derivativeValue").textContent =
+      (derivative < 0 ? "−" : "") + Math.abs(derivative).toFixed(3) + " MB/s²";
+    document.getElementById("changeValue").textContent =
+      change === null ? "—（第 0 秒）" :
+      (change < 0 ? "−" : "+") + Math.abs(change).toFixed(3) + " MB/s";
+
+    let interpretation = "";
+    if (t === 0) {
+      interpretation = "此刻是模型的起點，下載速度為 80 MB/s。導數為 −8 MB/s²，表示起始時速度下降得最快。";
+    } else if (t < 10) {
+      interpretation = "下載速度正在下降，而且目前的瞬時變化率絕對值仍較大。也就是說，速度下降得相對快。";
+    } else if (t < 20) {
+      interpretation = "下載速度比剛開始時低。導數仍是負數，但其絕對值比起始時小，代表速度還在下降，只是下降幅度逐漸變小。";
+    } else {
+      interpretation = "下載速度已比一開始低很多。導數仍為負，但數值逐漸接近 0，表示速度仍在下降，只是下降得越來越慢。";
+    }
+    document.getElementById("interpretation").innerHTML =
+      "<strong>第 " + t + " 秒的觀察：</strong>" + interpretation;
+
+    drawChart(t);
+  }
+
+  function drawChart(selectedT) {
+    const canvas = document.getElementById("chart");
+    const ctx = canvas.getContext("2d");
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = Math.max(1, Math.round(rect.width * dpr));
+    canvas.height = Math.max(1, Math.round(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const w = rect.width, h = rect.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const left = 50, right = 20, top = 35, bottom = 42;
+    const pw = w - left - right, ph = h - top - bottom;
+    const x = t => left + (t / 30) * pw;
+    const ySpeed = s => top + (1 - s / 80) * ph;
+    const yDeriv = d => top + (1 - (d + 8) / 8) * ph;
+
+    ctx.font = "12px Arial, sans-serif";
+    ctx.strokeStyle = "#e5eaf2";
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+      const yy = top + ph * i / 4;
+      ctx.beginPath(); ctx.moveTo(left, yy); ctx.lineTo(w - right, yy); ctx.stroke();
+    }
+    ctx.strokeStyle = "#8a97aa";
+    ctx.beginPath(); ctx.moveTo(left, h - bottom); ctx.lineTo(w - right, h - bottom); ctx.stroke();
+
+    ctx.fillStyle = "#59677c";
+    for (let t = 0; t <= 30; t += 5) {
+      ctx.fillText(String(t), x(t) - 3, h - bottom + 18);
+    }
+    ctx.fillText("時間 t（秒）", w - 98, h - 9);
+
+    // S(t)：藍色曲線
+    ctx.beginPath(); ctx.strokeStyle = "#2878d0"; ctx.lineWidth = 3;
+    for (let i = 0; i <= 300; i++) {
+      const t = i / 10, xx = x(t), yy = ySpeed(80 * Math.exp(-0.1 * t));
+      if (i === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy);
+    }
+    ctx.stroke();
+
+    // S'(t)：紅色曲線
+    ctx.beginPath(); ctx.strokeStyle = "#d94d45"; ctx.lineWidth = 3;
+    for (let i = 0; i <= 300; i++) {
+      const t = i / 10, xx = x(t), yy = yDeriv(-8 * Math.exp(-0.1 * t));
+      if (i === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy);
+    }
+    ctx.stroke();
+
+    // 選取時間的虛線
+    const xx = x(selectedT);
+    ctx.save();
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = "#34445e"; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(xx, top); ctx.lineTo(xx, h - bottom); ctx.stroke();
+    ctx.restore();
+
+    // 兩條曲線上的目前位置
+    const s = 80 * Math.exp(-0.1 * selectedT);
+    const d = -8 * Math.exp(-0.1 * selectedT);
+    ctx.fillStyle = "#2878d0";
+    ctx.beginPath(); ctx.arc(xx, ySpeed(s), 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#d94d45";
+    ctx.beginPath(); ctx.arc(xx, yDeriv(d), 5, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = "#243047";
+    const labelX = Math.min(xx + 7, w - 72);
+    ctx.fillText("t = " + selectedT, labelX, top + 14);
+  }
+
+  window.addEventListener("resize", () => {
+    const simulator = document.getElementById("simulator");
+    if (!simulator.classList.contains("hidden")) {
+      drawChart(Number(document.getElementById("timeSlider").value));
+    }
+  });
+</script>
+</body>
+</html>
+
+</body>
+</html>
