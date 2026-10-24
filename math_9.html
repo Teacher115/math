@@ -7,328 +7,333 @@
 
 <body>
 
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>對數微分的應用｜電商流量分析</title>
-  <style>
-    :root {
-      --ink: #182230;
-      --muted: #5c6878;
-      --paper: #f5f7fb;
-      --card: #ffffff;
-      --line: #dce3ed;
-      --blue: #2459c4;
-      --blue-soft: #eaf1ff;
-      --green: #16794b;
-      --green-soft: #e8f7ef;
-      --red: #b42318;
-      --red-soft: #fff0ef;
-      --gold: #a15c00;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--ink); background: var(--paper); line-height: 1.7;
-    }
-    header {
-      padding: 46px 20px 38px;
-      background: linear-gradient(135deg, #142b55, #2459c4);
-      color: white;
-    }
-    .hero, main { max-width: 1000px; margin: 0 auto; }
-    .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; opacity: .85; }
-    h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); line-height: 1.2; margin: 10px 0 14px; }
-    header p { max-width: 720px; margin: 0; color: #e7efff; }
-    main { padding: 24px 16px 60px; }
-    section, .panel {
-      background: var(--card); border: 1px solid var(--line); border-radius: 18px;
-      padding: clamp(18px, 3vw, 28px); margin: 18px 0; box-shadow: 0 5px 18px rgba(28, 45, 78, .04);
-    }
-    h2 { margin: 0 0 12px; font-size: 1.35rem; }
-    h3 { margin: 0 0 8px; font-size: 1.05rem; }
-    p { margin: 8px 0 12px; }
-    .muted { color: var(--muted); }
-    .formula {
-      padding: 16px; background: #f0f4fb; border-radius: 12px; text-align: center;
-      font-size: clamp(1.15rem, 3vw, 1.55rem); font-weight: 650; margin: 14px 0;
-      overflow-wrap: anywhere;
-    }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .metric { background: #f7f9fc; border: 1px solid var(--line); padding: 16px; border-radius: 14px; }
-    .metric .label { color: var(--muted); font-size: .9rem; }
-    .metric .value { font-size: 1.65rem; font-weight: 750; margin-top: 3px; }
-    .steps { display: grid; gap: 10px; counter-reset: step; }
-    .step { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
-    .step::before {
-      counter-increment: step; content: counter(step); display: grid; place-items: center;
-      width: 32px; height: 32px; border-radius: 50%; background: var(--blue-soft); color: var(--blue); font-weight: 700;
-    }
-    .quiz { border-top: 1px solid var(--line); padding-top: 20px; margin-top: 20px; }
-    .quiz:first-of-type { border-top: 0; padding-top: 0; margin-top: 8px; }
-    .option {
-      display: flex; gap: 10px; align-items: flex-start; padding: 11px 12px; margin: 8px 0;
-      border: 1px solid var(--line); border-radius: 11px; cursor: pointer; transition: background .15s, border .15s;
-    }
-    .option:hover { background: #f7f9ff; border-color: #9bb5ed; }
-    .option input { margin-top: 6px; accent-color: var(--blue); }
-    button {
-      border: 0; border-radius: 10px; background: var(--blue); color: white; font: inherit; font-weight: 650;
-      padding: 10px 16px; cursor: pointer; margin-top: 8px;
-    }
-    button:hover { filter: brightness(.94); }
-    button.secondary { background: #e9eef7; color: var(--ink); }
-    .feedback { display: none; padding: 13px 15px; margin-top: 12px; border-radius: 11px; }
-    .feedback.show { display: block; }
-    .feedback.correct { background: var(--green-soft); color: #125c3a; }
-    .feedback.incorrect { background: var(--red-soft); color: #8f1d16; }
-    .chart-wrap { width: 100%; overflow: hidden; }
-    canvas { display: block; width: 100%; height: 300px; }
-    .slider-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; margin: 18px 0 8px; }
-    input[type="range"] { width: 100%; accent-color: var(--blue); }
-    .pill { display: inline-block; background: var(--blue-soft); color: var(--blue); padding: 4px 10px; border-radius: 999px; font-size: .86rem; font-weight: 650; }
-    .note { border-left: 4px solid #e0a03a; padding: 10px 14px; background: #fff8e9; border-radius: 0 10px 10px 0; }
-    .score { font-weight: 750; color: var(--blue); }
-    footer { text-align: center; color: var(--muted); padding: 10px 16px 36px; font-size: .9rem; }
-    @media (max-width: 650px) {
-      .grid { grid-template-columns: 1fr; }
-      canvas { height: 260px; }
-      header { padding-top: 34px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>對數微分與電商流量分析</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;background:#f3f6fb;color:#202b3c;
+  font-family:Arial,"Microsoft JhengHei",sans-serif;line-height:1.7
+}
+header{background:#193768;color:white;padding:32px 20px}
+header,main{width:100%}
+header div,main{max-width:900px;margin:auto}
+h1{margin:0 0 8px;font-size:clamp(25px,4vw,36px)}
+main{padding:20px 15px 45px}
+.card{
+  background:white;border:1px solid #dce4ef;border-radius:16px;
+  padding:22px;margin-bottom:18px;box-shadow:0 4px 14px #1b35500a
+}
+h2{font-size:21px;margin:0 0 12px}
+h3{font-size:17px;margin:12px 0}
+.formula{
+  background:#edf3ff;padding:16px;border-radius:12px;
+  text-align:center;font-size:23px;font-weight:bold;margin:14px 0
+}
+.muted{color:#66758a;font-size:14px}
+label{display:block;margin:10px 0 5px;font-weight:600}
+input,select{
+  font:inherit;padding:10px 12px;border:1px solid #cbd5e1;
+  border-radius:9px;background:white;max-width:100%
+}
+input[type=number],input[type=text]{width:100%}
+button{
+  font:inherit;font-weight:bold;border:0;border-radius:9px;
+  background:#2459c4;color:white;padding:10px 16px;
+  cursor:pointer;margin-top:12px
+}
+button:hover{background:#1948a6}
+button:disabled{background:#aab6c8;cursor:not-allowed}
+.result{
+  display:none;margin-top:14px;padding:14px;border-radius:10px;
+  background:#eaf7ef;color:#155c39
+}
+.error{background:#fff0ef;color:#9c261e}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.metric{background:#f5f7fb;border-radius:12px;padding:14px}
+.metric small{display:block;color:#66758a}
+.metric strong{font-size:24px;overflow-wrap:anywhere}
+canvas{width:100%;height:310px;display:block;margin-top:15px}
+.bar-labels{display:flex;gap:14px;flex-wrap:wrap;font-size:14px}
+.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px}
+footer{text-align:center;padding:0 16px 30px;color:#66758a;font-size:13px}
+@media(max-width:560px){
+ .grid{grid-template-columns:1fr}
+ .card{padding:17px}
+ canvas{height:280px}
+}
+</style>
 </head>
 <body>
+
 <header>
-  <div class="hero">
-    <div class="eyebrow">Calculus × E-commerce Analytics</div>
-    <h1>對數微分：分析電商網站的成長速度</h1>
-    <p>微分不只是在算公式，也能幫助我們回答：「某個指標現在變化得多快？」透過一個簡化的網站流量指標模型，學習對數微分與它的應用。</p>
+  <div>
+    <h1>對數微分：電商流量分析</h1>
+    <div>先計算公式，再輸入時間，最後用長條圖觀察指標的變化。</div>
   </div>
 </header>
 
 <main>
-  <section>
-    <span class="pill">情境任務</span>
-    <h2 style="margin-top:12px">電商網站為什麼要看成長速度？</h2>
-    <p>網站團隊除了關心流量指標目前有多高，也會想知道指標的成長速度是否變快或變慢。這裡使用一個簡化的數學模型：</p>
+  <section class="card">
+    <h2>情境：網站成長速度分析</h2>
+    <p>某電商網站使用以下簡化模型描述一項流量成長指標：</p>
     <div class="formula">G(t) = ln(2t + 1)</div>
-    <p>其中 <strong>t</strong> 代表經過的天數，<strong>G(t)</strong> 是一個抽象的流量成長指標。這是用來練習微分的示範模型，不是實際訪客人數的預測公式。</p>
+    <p>其中 t 代表經過的天數，G(t) 是成長指標。網站分析人員希望知道指標的數值，以及它隨時間變化的速度。</p>
+    <p class="muted">注意：這是數學教學模型，並非實際訪客人數的預測公式。</p>
+  </section>
+
+  <section class="card">
+    <h2>第一步：自己算出微分公式</h2>
+    <p>已知 G(t) = ln(2t + 1)，請填入導數公式中的分子與分母。</p>
+    <div class="formula">G′(t) = <span style="font-size:20px">分子</span> / <span style="font-size:20px">分母</span></div>
+
     <div class="grid">
-      <div class="metric">
-        <div class="label">我們想知道</div>
-        <div class="value">G′(t)</div>
-        <div class="muted">指標的瞬間變化率</div>
+      <div>
+        <label for="numerator">分子</label>
+        <input id="numerator" type="text" placeholder="例如：2">
       </div>
-      <div class="metric">
-        <div class="label">分析的用途</div>
-        <div class="value">比較速度</div>
-        <div class="muted">觀察成長是否放緩</div>
+      <div>
+        <label for="denominator">分母</label>
+        <input id="denominator" type="text" placeholder="例如：2t+1">
       </div>
+    </div>
+    <button id="checkFormula">檢查答案</button>
+    <div id="formulaFeedback" class="result" aria-live="polite"></div>
+    <div id="formulaSolution" style="display:none">
+      <h3>公式推導</h3>
+      <p>對數微分公式：</p>
+      <div class="formula">d[ln u]/dt = u′/u</div>
+      <p>令 u = 2t + 1，則 u′ = 2。</p>
+      <div class="formula">G′(t) = 2 / (2t + 1)</div>
+      <p>這個導數代表成長指標的瞬間變化率。</p>
     </div>
   </section>
 
-  <section>
-    <h2>一、一步一步推導對數微分</h2>
-    <p>已知 <strong>G(t) = ln(2t + 1)</strong>，求它的導數。</p>
-    <div class="steps">
-      <div class="step"><div><strong>先記住公式</strong><div class="formula">d/dt [ln u] = (1/u) × (du/dt)</div></div></div>
-      <div class="step"><div><strong>找出對數裡面的函數</strong><p>令 u = 2t + 1，因此 du/dt = 2。</p></div></div>
-      <div class="step"><div><strong>套用鏈鎖律</strong><div class="formula">G′(t) = 1/(2t + 1) × 2</div></div></div>
-      <div class="step"><div><strong>整理結果</strong><div class="formula">G′(t) = 2/(2t + 1)</div><p class="muted">這個導數代表指標在某個時間點附近的瞬間變化率。</p></div></div>
-    </div>
-  </section>
+  <section class="card" id="analysisSection" style="opacity:.55">
+    <h2>第二步：輸入想觀察的時間</h2>
+    <p>完成第一步後，即可輸入天數，觀察該時間點的成長指標與變化率。</p>
+    <label for="days">觀察到第幾天？（1–20 天）</label>
+    <input id="days" type="number" min="1" max="20" step="1" value="4" disabled>
+    <button id="calculate" disabled>計算並更新長條圖</button>
 
-  <section>
-    <h2>二、互動觀察：時間改變，變化率會如何變化？</h2>
-    <p>拖曳時間滑桿，觀察指標 G(t) 與導數 G′(t) 的數值。你會看到指標持續上升，但變化率逐漸降低。</p>
-    <div class="slider-row">
-      <label for="timeSlider"><strong>經過時間 t</strong></label>
-      <strong id="timeLabel">4 天</strong>
-    </div>
-    <input id="timeSlider" type="range" min="0" max="20" step="1" value="4" aria-label="經過的天數">
-    <div class="grid" style="margin-top:16px">
-      <div class="metric">
-        <div class="label">指標數值 G(t) = ln(2t + 1)</div>
-        <div class="value" id="gValue">2.197</div>
+    <div id="metrics" style="display:none;margin-top:18px">
+      <div class="grid">
+        <div class="metric">
+          <small>成長指標 G(t)</small>
+          <strong id="gValue">—</strong>
+        </div>
+        <div class="metric">
+          <small>瞬間變化率 G′(t)</small>
+          <strong id="rateValue">—</strong>
+        </div>
       </div>
-      <div class="metric">
-        <div class="label">瞬間變化率 G′(t) = 2/(2t + 1)</div>
-        <div class="value" id="gpValue">0.222</div>
+
+      <h3>第三步：觀察長條圖</h3>
+      <label for="chartType">選擇要比較的數值</label>
+      <select id="chartType">
+        <option value="g">成長指標 G(t)</option>
+        <option value="rate">瞬間變化率 G′(t)</option>
+      </select>
+      <div class="bar-labels">
+        <span><i class="dot" style="background:#3478df"></i>各天數的數值</span>
+        <span><i class="dot" style="background:#e89a35"></i>目前選定的天數</span>
       </div>
+      <canvas id="chart" aria-label="不同天數的成長指標或瞬間變化率長條圖"></canvas>
+      <p id="chartDescription" class="muted"></p>
     </div>
-    <div class="chart-wrap"><canvas id="chart" aria-label="指標數值與變化率圖表"></canvas></div>
-    <p class="muted">圖表中，藍線代表 G(t)，橘線代表 G′(t)。兩者使用不同的垂直尺度以方便觀察。</p>
   </section>
 
-  <section>
-    <h2>三、互動練習</h2>
-    <p class="muted">每題選擇一個答案，再按「檢查答案」查看解析。</p>
-    <div class="quiz" data-answer="B">
-      <h3>第 1 題｜計算微分</h3>
-      <p>已知 G(t) = ln(2t + 1)，請問 G′(t) 為何？</p>
-      <label class="option"><input type="radio" name="q1" value="A"><span>A. 1/(2t + 1)</span></label>
-      <label class="option"><input type="radio" name="q1" value="B"><span>B. 2/(2t + 1)</span></label>
-      <label class="option"><input type="radio" name="q1" value="C"><span>C. ln 2</span></label>
-      <label class="option"><input type="radio" name="q1" value="D"><span>D. 2t + 1</span></label>
-      <button onclick="checkAnswer(1)">檢查答案</button>
-      <div class="feedback" id="feedback1" aria-live="polite"></div>
-    </div>
-
-    <div class="quiz" data-answer="B">
-      <h3>第 2 題｜代入特定時間</h3>
-      <p>當 t = 4 時，指標的瞬間變化率是多少？</p>
-      <label class="option"><input type="radio" name="q2" value="A"><span>A. 9</span></label>
-      <label class="option"><input type="radio" name="q2" value="B"><span>B. 2/9 ≈ 0.222</span></label>
-      <label class="option"><input type="radio" name="q2" value="C"><span>C. ln 9 ≈ 2.197</span></label>
-      <label class="option"><input type="radio" name="q2" value="D"><span>D. 1/9 ≈ 0.111</span></label>
-      <button onclick="checkAnswer(2)">檢查答案</button>
-      <div class="feedback" id="feedback2" aria-live="polite"></div>
-    </div>
-
-    <div class="quiz" data-answer="A">
-      <h3>第 3 題｜比較成長速度</h3>
-      <p>比較第 1 天與第 10 天，哪一天的指標成長速度較快？</p>
-      <label class="option"><input type="radio" name="q3" value="A"><span>A. 第 1 天，因為變化率較大</span></label>
-      <label class="option"><input type="radio" name="q3" value="B"><span>B. 第 10 天，因為經過時間較久</span></label>
-      <label class="option"><input type="radio" name="q3" value="C"><span>C. 兩天的變化率相同</span></label>
-      <label class="option"><input type="radio" name="q3" value="D"><span>D. 無法比較</span></label>
-      <button onclick="checkAnswer(3)">檢查答案</button>
-      <div class="feedback" id="feedback3" aria-live="polite"></div>
-    </div>
-    <p class="score" id="score" aria-live="polite">已完成 0 / 3 題</p>
-    <button class="secondary" onclick="resetQuiz()">重新作答</button>
+  <section class="card">
+    <h2>思考題：這個結果代表什麼？</h2>
+    <p>如果第 1 天的變化率比第 10 天大，代表什麼意思？</p>
+    <select id="thinking" style="width:100%">
+      <option value="">請選擇答案</option>
+      <option value="a">第 1 天附近，指標成長得比較快</option>
+      <option value="b">第 10 天的指標一定比較小</option>
+      <option value="c">兩天的指標數值相同</option>
+    </select>
+    <button id="checkThinking">確認答案</button>
+    <div id="thinkingFeedback" class="result" aria-live="polite"></div>
   </section>
 
-  <section>
-    <h2>四、解答與應用總結</h2>
-    <div class="steps">
-      <div class="step"><div><strong>第 1 題：B</strong><p>G′(t) = 2/(2t + 1)。使用鏈鎖律，需乘上括號內函數的微分 2。</p></div></div>
-      <div class="step"><div><strong>第 2 題：B</strong><p>G′(4) = 2/[2(4) + 1] = 2/9 ≈ 0.222 個指標單位／天。</p></div></div>
-      <div class="step"><div><strong>第 3 題：A</strong><p>G′(1) = 2/3 ≈ 0.667；G′(10) = 2/21 ≈ 0.095，所以第 1 天的變化率較大。</p></div></div>
-    </div>
-    <div class="note"><strong>重要提醒：</strong>本例的 G(t) 是簡化的指標模型。真實電商分析仍需蒐集實際流量資料，確認模型是否適用。數學模型可以幫助我們理解趨勢，但不會自動證明真實網站的流量一定如此變化。</div>
-    <p><strong>帶走的觀念：</strong>函數 G(t) 描述指標數值；導數 G′(t) 描述指標的瞬間變化率。對數微分能協助分析變化速度，這也是微積分在商業分析與資料科學中的應用之一。</p>
+  <section class="card">
+    <h2>學習總結</h2>
+    <p><strong>函數 G(t)：</strong>描述某一天的成長指標數值。</p>
+    <p><strong>導數 G′(t)：</strong>描述該時間點附近，指標變化得有多快。</p>
+    <p><strong>長條圖：</strong>協助比較不同天數的數值，觀察變化率是否逐漸下降。</p>
+    <p class="muted">真實商業分析仍須搭配實際網站數據，不能只憑示範模型推論真實流量。</p>
   </section>
 </main>
-<footer>對數微分互動教材｜可離線開啟，無需安裝套件</footer>
+
+<footer>對數微分互動學習｜單一 HTML 檔案｜可離線使用</footer>
 
 <script>
-  const explanations = {
-    1: {
-      correct: "推導：G′(t) = [1/(2t + 1)] × 2 = 2/(2t + 1)。對 ln(u) 微分時，要乘上內部函數 u 的導數。",
-      wrong: "再試一次。對 ln(u) 微分時，先得到 1/u，接著還要乘上 u′。本題 u = 2t + 1。"
-    },
-    2: {
-      correct: "計算：G′(4) = 2/[2(4) + 1] = 2/9 ≈ 0.222。這是第 4 天附近的瞬間變化率。",
-      wrong: "請先使用 G′(t) = 2/(2t + 1)，再將 t = 4 代入分母，計算結果。"
-    },
-    3: {
-      correct: "G′(1) = 2/3 ≈ 0.667；G′(10) = 2/21 ≈ 0.095。第 1 天的變化率較大，所以模型在第 1 天附近成長得較快。",
-      wrong: "比較兩個時間點的導數：G′(1) = 2/3，G′(10) = 2/21。導數數值較大，代表該點的瞬間變化率較大。"
-    }
-  };
-  const answers = {};
-  function checkAnswer(n) {
-    const selected = document.querySelector(`input[name="q${n}"]:checked`);
-    const box = document.getElementById(`feedback${n}`);
-    if (!selected) {
-      box.className = "feedback show incorrect";
-      box.textContent = "請先選擇一個答案，再檢查。";
-      return;
-    }
-    const correct = selected.value === document.querySelector(`.quiz:nth-of-type(${n})`)?.dataset.answer;
-    // Each quiz is located after the intro paragraph; use the selected value against the known answer key.
-    const key = {1:"B", 2:"B", 3:"A"}[n];
-    const isCorrect = selected.value === key;
-    answers[n] = isCorrect;
-    box.className = "feedback show " + (isCorrect ? "correct" : "incorrect");
-    box.textContent = (isCorrect ? "回答正確！ " : "這個答案還不正確。 ") + (isCorrect ? explanations[n].correct : explanations[n].wrong);
-    updateScore();
+const $ = id => document.getElementById(id);
+let formulaUnlocked = false;
+
+function normalize(s) {
+  return s.toLowerCase().replace(/\s+/g, "")
+    .replace(/[()（）]/g, "");
+}
+
+$("checkFormula").addEventListener("click", () => {
+  const n = normalize($("numerator").value);
+  const d = normalize($("denominator").value);
+  const feedback = $("formulaFeedback");
+
+  const numeratorOK = n === "2";
+  const denominatorOK =
+    d === "2t+1" || d === "1+2t";
+
+  feedback.style.display = "block";
+
+  if (numeratorOK && denominatorOK) {
+    feedback.className = "result";
+    feedback.textContent = "答對了！你已經求出正確的微分公式。";
+    $("formulaSolution").style.display = "block";
+    $("analysisSection").style.opacity = "1";
+    $("days").disabled = false;
+    $("calculate").disabled = false;
+    formulaUnlocked = true;
+    calculate();
+  } else {
+    feedback.className = "result error";
+    feedback.textContent =
+      "還不完全正確。請回想 d[ln(u)]/dt = u′/u，再檢查分子與分母。";
   }
-  function updateScore() {
-    const done = Object.keys(answers).length;
-    const score = Object.values(answers).filter(Boolean).length;
-    document.getElementById("score").textContent = `已完成 ${done} / 3 題｜答對 ${score} 題`;
-  }
-  function resetQuiz() {
-    document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
-    document.querySelectorAll(".feedback").forEach(el => { el.className = "feedback"; el.textContent = ""; });
-    Object.keys(answers).forEach(k => delete answers[k]);
-    document.getElementById("score").textContent = "已完成 0 / 3 題";
+});
+
+function G(t) {
+  return Math.log(2 * t + 1);
+}
+
+function rate(t) {
+  return 2 / (2 * t + 1);
+}
+
+function calculate() {
+  if (!formulaUnlocked) return;
+
+  const t = Number($("days").value);
+  if (!Number.isInteger(t) || t < 1 || t > 20) {
+    alert("請輸入 1 到 20 之間的整數天數。");
+    return;
   }
 
-  const slider = document.getElementById("timeSlider");
-  const timeLabel = document.getElementById("timeLabel");
-  const gValue = document.getElementById("gValue");
-  const gpValue = document.getElementById("gpValue");
-  const canvas = document.getElementById("chart");
+  $("metrics").style.display = "block";
+  $("gValue").textContent = G(t).toFixed(3);
+  $("rateValue").textContent = rate(t).toFixed(3);
+  drawChart(t);
+}
+
+$("calculate").addEventListener("click", calculate);
+$("chartType").addEventListener("change", () => {
+  if (formulaUnlocked) drawChart(Number($("days").value));
+});
+
+function drawChart(selectedDay) {
+  const canvas = $("chart");
   const ctx = canvas.getContext("2d");
-  function fmt(n) { return n.toFixed(3); }
-  function updateMetrics() {
-    const t = Number(slider.value);
-    timeLabel.textContent = `${t} 天`;
-    gValue.textContent = fmt(Math.log(2 * t + 1));
-    gpValue.textContent = fmt(2 / (2 * t + 1));
-    drawChart(t);
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+
+  canvas.width = Math.max(1, rect.width * dpr);
+  canvas.height = Math.max(1, rect.height * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const w = rect.width;
+  const h = rect.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const type = $("chartType").value;
+  const data = [];
+  for (let day = 1; day <= selectedDay; day++) {
+    data.push({
+      day,
+      value: type === "g" ? G(day) : rate(day)
+    });
   }
-  function drawChart(tNow) {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const w = rect.width, h = rect.height;
-    const pad = {l: 44, r: 18, t: 20, b: 36};
-    const pw = w - pad.l - pad.r, ph = h - pad.t - pad.b;
-    ctx.clearRect(0, 0, w, h);
-    ctx.font = "12px system-ui, sans-serif";
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "#dce3ed";
-    ctx.fillStyle = "#5c6878";
-    for (let i = 0; i <= 4; i++) {
-      const y = pad.t + ph * i / 4;
-      ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w-pad.r, y); ctx.stroke();
-      ctx.fillText((3 - i * 0.75).toFixed(2), 4, y + 4);
-    }
-    for (let i = 0; i <= 4; i++) {
-      const x = pad.l + pw * i / 4;
-      ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, h-pad.b); ctx.stroke();
-      ctx.fillText(String(i*5), x-4, h-12);
-    }
-    ctx.fillStyle = "#5c6878"; ctx.fillText("天數 t", w-48, h-12);
-    const xMap = t => pad.l + (t / 20) * pw;
-    const yG = val => pad.t + ph * (1 - val / 3);
-    const yD = val => pad.t + ph * (1 - val / 2);
-    function plot(fn, yMap, color) {
-      ctx.beginPath();
-      for (let i=0; i<=200; i++) {
-        const t = i/10, x=xMap(t), y=yMap(fn(t));
-        if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      }
-      ctx.strokeStyle = color; ctx.lineWidth = 2.6; ctx.stroke();
-    }
-    plot(t => Math.log(2*t+1), yG, "#2459c4");
-    plot(t => 2/(2*t+1), yD, "#e58a22");
-    const x = xMap(tNow);
-    ctx.setLineDash([4,4]); ctx.strokeStyle = "#68778d"; ctx.lineWidth = 1.2;
-    ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,h-pad.b); ctx.stroke(); ctx.setLineDash([]);
-    const yg = yG(Math.log(2*tNow+1));
-    ctx.fillStyle = "#2459c4"; ctx.beginPath(); ctx.arc(x,yg,4.5,0,Math.PI*2); ctx.fill();
-    const yd = yD(2/(2*tNow+1));
-    ctx.fillStyle = "#e58a22"; ctx.beginPath(); ctx.arc(x,yd,4.5,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle = "#2459c4"; ctx.fillRect(pad.l+6,pad.t+4,10,3);
-    ctx.fillStyle = "#182230"; ctx.fillText("G(t)",pad.l+21,pad.t+10);
-    ctx.fillStyle = "#e58a22"; ctx.fillRect(pad.l+70,pad.t+4,10,3);
-    ctx.fillStyle = "#182230"; ctx.fillText("G′(t)",pad.l+85,pad.t+10);
+
+  const maxValue = Math.max(...data.map(d => d.value)) * 1.18 || 1;
+  const left = 43, right = 12, top = 22, bottom = 43;
+  const plotW = w - left - right;
+  const plotH = h - top - bottom;
+
+  ctx.font = "12px Arial, sans-serif";
+  ctx.fillStyle = "#627087";
+  ctx.strokeStyle = "#e0e6ef";
+  ctx.lineWidth = 1;
+
+  for (let i = 0; i <= 4; i++) {
+    const y = top + plotH * i / 4;
+    ctx.beginPath();
+    ctx.moveTo(left, y);
+    ctx.lineTo(w - right, y);
+    ctx.stroke();
+    const value = maxValue * (1 - i / 4);
+    ctx.fillText(value.toFixed(2), 2, y + 4);
   }
-  slider.addEventListener("input", updateMetrics);
-  window.addEventListener("resize", updateMetrics);
-  updateMetrics();
+
+  const slot = plotW / data.length;
+  const barW = Math.max(4, Math.min(34, slot * 0.62));
+
+  data.forEach(d => {
+    const x = left + slot * (d.day - 0.5);
+    const barH = d.value / maxValue * plotH;
+    ctx.fillStyle = d.day === selectedDay ? "#e89a35" : "#3478df";
+    ctx.fillRect(x - barW / 2, top + plotH - barH, barW, barH);
+
+    ctx.fillStyle = "#44516a";
+    ctx.textAlign = "center";
+    if (data.length <= 12 || d.day === 1 ||
+        d.day === selectedDay || d.day % 5 === 0) {
+      ctx.fillText(String(d.day), x, h - 23);
+    }
+  });
+
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#44516a";
+  ctx.fillText("數值", 3, 13);
+  ctx.textAlign = "center";
+  ctx.fillText("天數", left + plotW / 2, h - 5);
+
+  if (type === "g") {
+    $("chartDescription").textContent =
+      `目前顯示第 1 至第 ${selectedDay} 天的成長指標。橘色長條是第 ${selectedDay} 天；在此模型中，指標隨時間增加。`;
+  } else {
+    $("chartDescription").textContent =
+      `目前顯示第 1 至第 ${selectedDay} 天的瞬間變化率。橘色長條是第 ${selectedDay} 天；在此模型中，變化率會隨時間增加而下降。`;
+  }
+}
+
+$("checkThinking").addEventListener("click", () => {
+  const value = $("thinking").value;
+  const feedback = $("thinkingFeedback");
+  feedback.style.display = "block";
+
+  if (value === "a") {
+    feedback.className = "result";
+    feedback.textContent =
+      "答對了！導數較大表示該時間點附近的瞬間變化率較大，但不代表該天的指標數值一定較大。";
+  } else {
+    feedback.className = "result error";
+    feedback.textContent =
+      "再想一想：變化率描述的是指標變動的速度，不是指標本身的大小。";
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (formulaUnlocked && $("metrics").style.display !== "none") {
+    drawChart(Number($("days").value));
+  }
+});
 </script>
 </body>
 </html>
-
 
 </body>
 </html>
