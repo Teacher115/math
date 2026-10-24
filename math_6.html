@@ -1,0 +1,528 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>math_6</title>
+</head>
+
+<body>
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>指數微分互動闖關</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, "Microsoft JhengHei", sans-serif;
+      background: #f2f5fb;
+      color: #243047;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      color: #244c8a;
+      margin-top: 0;
+    }
+
+    h2 {
+      color: #315d9b;
+      font-size: 21px;
+    }
+
+    .formula {
+      padding: 16px;
+      background: #eef4ff;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 23px;
+      font-weight: bold;
+      margin: 16px 0;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      max-width: 320px;
+      padding: 12px;
+      margin-top: 6px;
+      font-size: 17px;
+      border: 1px solid #bbc7d8;
+      border-radius: 8px;
+    }
+
+    button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 22px;
+      border: none;
+      border-radius: 8px;
+      background: #315d9b;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #244474;
+    }
+
+    .message {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .success {
+      display: block;
+      background: #e5f7eb;
+      color: #176534;
+    }
+
+    .error {
+      display: block;
+      background: #fff0ed;
+      color: #a33325;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result {
+      padding: 14px;
+      margin: 10px 0;
+      background: #f4f7fb;
+      border-radius: 8px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 320px;
+      border: 1px solid #dce3ed;
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+
+    details {
+      margin-top: 18px;
+      padding: 12px;
+      background: #f6f8fc;
+      border-radius: 8px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #68758a;
+    }
+
+    .question {
+      background: #fff8e7;
+      padding: 14px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <div class="card">
+    <h1>🎯 指數微分互動闖關</h1>
+    <p>
+      你正在下載一個大型檔案。下載速度會隨時間逐漸下降，
+      我們可以利用指數函數描述這個簡化情境。
+    </p>
+
+    <div class="formula">
+      S(t) = 80e<sup>−0.1t</sup>
+    </div>
+
+    <p>
+      <strong>S(t)</strong>：下載速度，單位為 MB/s。<br>
+      <strong>t</strong>：開始下載後的秒數。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>第一關：求導數</h2>
+    <p>請利用指數函數的微分公式，求出 S'(t)。</p>
+
+    <div class="formula">
+      S'(t) = ______ × e<sup>−0.1t</sup>
+    </div>
+
+    <label for="coefficient">
+      1. 請輸入導數前面的係數：
+    </label>
+    <input
+      id="coefficient"
+      type="number"
+      step="any"
+      placeholder="例如：-8"
+    >
+
+    <label for="rate">
+      2. 當 t = 10 時，S'(10) 等於多少？
+      <br>
+      <span class="note">請四捨五入至小數點後三位。</span>
+    </label>
+    <input
+      id="rate"
+      type="number"
+      step="any"
+      placeholder="請輸入數值"
+    >
+
+    <br>
+    <button onclick="checkAnswer()">提交答案</button>
+
+    <div id="message" class="message" aria-live="polite"></div>
+
+    <details>
+      <summary>需要提示嗎？點此查看</summary>
+      <p>
+        指數函數的微分公式：
+      </p>
+      <div class="formula">
+        (e<sup>u</sup>)' = e<sup>u</sup> × u'
+      </div>
+      <p>
+        記得將指數部分 −0.1t 再微分一次。
+        最後代入 t = 10，並使用 e<sup>−1</sup> ≈ 0.367879。
+      </p>
+    </details>
+  </div>
+
+  <div id="unlocked" class="hidden">
+
+    <div class="card">
+      <h2>🎉 闖關成功！</h2>
+      <p>你已完成指數函數微分，現在可以觀察函數的變化。</p>
+
+      <div class="result">
+        <strong>下載速度 S(10)</strong>
+        <div id="speedResult"></div>
+      </div>
+
+      <div class="result">
+        <strong>下載速度的瞬時變化率 S'(10)</strong>
+        <div id="rateResult"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>第二關：觀察函數圖形</h2>
+      <p>藍線代表下載速度 S(t)，紅線代表下載速度的變化率 S'(t)。</p>
+
+      <canvas id="chart"></canvas>
+
+      <p class="note">
+        為了方便觀察，兩條曲線使用各自的垂直刻度；
+        垂直虛線標示 t = 10 秒。
+      </p>
+
+      <details>
+        <summary>查看完整解題步驟</summary>
+
+        <p>步驟一：原始函數</p>
+        <div class="formula">
+          S(t) = 80e<sup>−0.1t</sup>
+        </div>
+
+        <p>步驟二：利用指數函數微分公式</p>
+        <div class="formula">
+          S'(t) = 80 × e<sup>−0.1t</sup> × (−0.1)
+        </div>
+
+        <p>步驟三：整理係數</p>
+        <div class="formula">
+          S'(t) = −8e<sup>−0.1t</sup>
+        </div>
+
+        <p>步驟四：代入 t = 10</p>
+        <div class="formula">
+          S'(10) = −8e<sup>−1</sup> ≈ −2.943
+        </div>
+
+        <p>
+          負號代表下載速度正在下降。
+          在第 10 秒附近，下載速度每秒約減少 2.943 MB/s；
+          這是該時刻的瞬時變化率，而非整段下載期間的平均變化率。
+        </p>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>第三關：思考與討論</h2>
+      <div class="question">
+        <p><strong>問題一：</strong>為什麼 S'(t) 是負數？</p>
+        <p><strong>問題二：</strong>如果 S'(t) = 0，代表什麼情況？</p>
+        <p><strong>問題三：</strong>當時間持續增加，S'(t) 會越來越負，還是逐漸接近 0？為什麼？</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function checkAnswer() {
+    const coefficient =
+      Number(document.getElementById("coefficient").value);
+
+    const rate =
+      Number(document.getElementById("rate").value);
+
+    const message = document.getElementById("message");
+    const unlocked = document.getElementById("unlocked");
+
+    if (
+      document.getElementById("coefficient").value.trim() === "" ||
+      document.getElementById("rate").value.trim() === ""
+    ) {
+      showMessage("請先填寫兩個答案，再提交。", false);
+      return;
+    }
+
+    const coefficientCorrect =
+      Math.abs(coefficient - (-8)) < 0.01;
+
+    const rateCorrect =
+      Math.abs(rate - (-2.943)) < 0.005;
+
+    if (coefficientCorrect && rateCorrect) {
+      showMessage("答對了！已解鎖後續圖表與解題步驟。", true);
+
+      unlocked.classList.remove("hidden");
+
+      document.getElementById("speedResult").textContent =
+        (80 * Math.exp(-1)).toFixed(3) + " MB/s";
+
+      document.getElementById("rateResult").textContent =
+        (-8 * Math.exp(-1)).toFixed(3) + " MB/s²";
+
+      drawChart();
+
+      unlocked.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    } else {
+      unlocked.classList.add("hidden");
+
+      let hint = "答案還不完全正確，請再試一次。";
+
+      if (!coefficientCorrect) {
+        hint += " 導數係數請再檢查一次。";
+      }
+
+      if (!rateCorrect) {
+        hint += " 請確認是否已代入 t = 10。";
+      }
+
+      showMessage(hint, false);
+    }
+  }
+
+  function showMessage(text, correct) {
+    const message = document.getElementById("message");
+
+    message.textContent = text;
+    message.className =
+      "message " + (correct ? "success" : "error");
+  }
+
+  function drawChart() {
+    const canvas = document.getElementById("chart");
+    const ctx = canvas.getContext("2d");
+
+    // 讓畫布在高解析度螢幕上仍保持清晰
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const width = rect.width;
+    const height = rect.height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const left = 48;
+    const right = 18;
+    const top = 30;
+    const bottom = 40;
+
+    const plotWidth = width - left - right;
+    const plotHeight = height - top - bottom;
+
+    function xPixel(t) {
+      return left + (t / 30) * plotWidth;
+    }
+
+    // 藍線 S(t) 的獨立刻度：0 到 80
+    function ySpeed(value) {
+      return top + plotHeight * (1 - value / 80);
+    }
+
+    // 紅線 S'(t) 的獨立刻度：-8 到 0
+    function yDerivative(value) {
+      return top + plotHeight * (1 - (value + 8) / 8);
+    }
+
+    // 繪製背景格線
+    ctx.strokeStyle = "#e5eaf2";
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i <= 4; i++) {
+      const y = top + (plotHeight / 4) * i;
+
+      ctx.beginPath();
+      ctx.moveTo(left, y);
+      ctx.lineTo(width - right, y);
+      ctx.stroke();
+    }
+
+    // 橫軸
+    ctx.strokeStyle = "#8794a8";
+    ctx.beginPath();
+    ctx.moveTo(left, height - bottom);
+    ctx.lineTo(width - right, height - bottom);
+    ctx.stroke();
+
+    // 時間刻度
+    ctx.fillStyle = "#536176";
+    ctx.font = "12px Arial";
+
+    for (let t = 0; t <= 30; t += 5) {
+      const x = xPixel(t);
+
+      ctx.fillText(
+        String(t),
+        x - 4,
+        height - bottom + 18
+      );
+    }
+
+    ctx.fillText("時間 t（秒）", width - 95, height - 8);
+
+    // 藍線：下載速度 S(t)
+    ctx.beginPath();
+    ctx.strokeStyle = "#2878d0";
+    ctx.lineWidth = 3;
+
+    for (let i = 0; i <= 300; i++) {
+      const t = i / 10;
+      const speed = 80 * Math.exp(-0.1 * t);
+      const x = xPixel(t);
+      const y = ySpeed(speed);
+
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+
+    ctx.stroke();
+
+    // 紅線：下載速度變化率 S'(t)
+    ctx.beginPath();
+    ctx.strokeStyle = "#df5a4e";
+    ctx.lineWidth = 3;
+
+    for (let i = 0; i <= 300; i++) {
+      const t = i / 10;
+      const derivative = -8 * Math.exp(-0.1 * t);
+      const x = xPixel(t);
+      const y = yDerivative(derivative);
+
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+
+    ctx.stroke();
+
+    // t = 10 秒標記
+    const x10 = xPixel(10);
+
+    ctx.save();
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = "#465267";
+    ctx.lineWidth = 1.5;
+
+    ctx.beginPath();
+    ctx.moveTo(x10, top);
+    ctx.lineTo(x10, height - bottom);
+    ctx.stroke();
+
+    ctx.restore();
+
+    ctx.fillStyle = "#243047";
+    ctx.fillText("t = 10", x10 + 5, top + 14);
+
+    // 圖例
+    ctx.fillStyle = "#2878d0";
+    ctx.fillRect(left, 8, 14, 4);
+
+    ctx.fillStyle = "#243047";
+    ctx.fillText("S(t) 下載速度", left + 20, 15);
+
+    ctx.fillStyle = "#df5a4e";
+    ctx.fillRect(left + 145, 8, 14, 4);
+
+    ctx.fillStyle = "#243047";
+    ctx.fillText("S'(t) 變化率", left + 165, 15);
+  }
+
+  // 若畫面尺寸改變，重新繪圖
+  window.addEventListener("resize", function () {
+    if (!document.getElementById("unlocked").classList.contains("hidden")) {
+      drawChart();
+    }
+  });
+</script>
+
+</body>
+</html>
+
+</body>
+</html>
