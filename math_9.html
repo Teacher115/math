@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+</head>
+
+<body>
+
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>對數微分的應用｜電商流量分析</title>
+  <style>
+    :root {
+      --ink: #182230;
+      --muted: #5c6878;
+      --paper: #f5f7fb;
+      --card: #ffffff;
+      --line: #dce3ed;
+      --blue: #2459c4;
+      --blue-soft: #eaf1ff;
+      --green: #16794b;
+      --green-soft: #e8f7ef;
+      --red: #b42318;
+      --red-soft: #fff0ef;
+      --gold: #a15c00;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink); background: var(--paper); line-height: 1.7;
+    }
+    header {
+      padding: 46px 20px 38px;
+      background: linear-gradient(135deg, #142b55, #2459c4);
+      color: white;
+    }
+    .hero, main { max-width: 1000px; margin: 0 auto; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; opacity: .85; }
+    h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); line-height: 1.2; margin: 10px 0 14px; }
+    header p { max-width: 720px; margin: 0; color: #e7efff; }
+    main { padding: 24px 16px 60px; }
+    section, .panel {
+      background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+      padding: clamp(18px, 3vw, 28px); margin: 18px 0; box-shadow: 0 5px 18px rgba(28, 45, 78, .04);
+    }
+    h2 { margin: 0 0 12px; font-size: 1.35rem; }
+    h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    p { margin: 8px 0 12px; }
+    .muted { color: var(--muted); }
+    .formula {
+      padding: 16px; background: #f0f4fb; border-radius: 12px; text-align: center;
+      font-size: clamp(1.15rem, 3vw, 1.55rem); font-weight: 650; margin: 14px 0;
+      overflow-wrap: anywhere;
+    }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .metric { background: #f7f9fc; border: 1px solid var(--line); padding: 16px; border-radius: 14px; }
+    .metric .label { color: var(--muted); font-size: .9rem; }
+    .metric .value { font-size: 1.65rem; font-weight: 750; margin-top: 3px; }
+    .steps { display: grid; gap: 10px; counter-reset: step; }
+    .step { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+    .step::before {
+      counter-increment: step; content: counter(step); display: grid; place-items: center;
+      width: 32px; height: 32px; border-radius: 50%; background: var(--blue-soft); color: var(--blue); font-weight: 700;
+    }
+    .quiz { border-top: 1px solid var(--line); padding-top: 20px; margin-top: 20px; }
+    .quiz:first-of-type { border-top: 0; padding-top: 0; margin-top: 8px; }
+    .option {
+      display: flex; gap: 10px; align-items: flex-start; padding: 11px 12px; margin: 8px 0;
+      border: 1px solid var(--line); border-radius: 11px; cursor: pointer; transition: background .15s, border .15s;
+    }
+    .option:hover { background: #f7f9ff; border-color: #9bb5ed; }
+    .option input { margin-top: 6px; accent-color: var(--blue); }
+    button {
+      border: 0; border-radius: 10px; background: var(--blue); color: white; font: inherit; font-weight: 650;
+      padding: 10px 16px; cursor: pointer; margin-top: 8px;
+    }
+    button:hover { filter: brightness(.94); }
+    button.secondary { background: #e9eef7; color: var(--ink); }
+    .feedback { display: none; padding: 13px 15px; margin-top: 12px; border-radius: 11px; }
+    .feedback.show { display: block; }
+    .feedback.correct { background: var(--green-soft); color: #125c3a; }
+    .feedback.incorrect { background: var(--red-soft); color: #8f1d16; }
+    .chart-wrap { width: 100%; overflow: hidden; }
+    canvas { display: block; width: 100%; height: 300px; }
+    .slider-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; margin: 18px 0 8px; }
+    input[type="range"] { width: 100%; accent-color: var(--blue); }
+    .pill { display: inline-block; background: var(--blue-soft); color: var(--blue); padding: 4px 10px; border-radius: 999px; font-size: .86rem; font-weight: 650; }
+    .note { border-left: 4px solid #e0a03a; padding: 10px 14px; background: #fff8e9; border-radius: 0 10px 10px 0; }
+    .score { font-weight: 750; color: var(--blue); }
+    footer { text-align: center; color: var(--muted); padding: 10px 16px 36px; font-size: .9rem; }
+    @media (max-width: 650px) {
+      .grid { grid-template-columns: 1fr; }
+      canvas { height: 260px; }
+      header { padding-top: 34px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="eyebrow">Calculus × E-commerce Analytics</div>
+    <h1>對數微分：分析電商網站的成長速度</h1>
+    <p>微分不只是在算公式，也能幫助我們回答：「某個指標現在變化得多快？」透過一個簡化的網站流量指標模型，學習對數微分與它的應用。</p>
+  </div>
+</header>
+
+<main>
+  <section>
+    <span class="pill">情境任務</span>
+    <h2 style="margin-top:12px">電商網站為什麼要看成長速度？</h2>
+    <p>網站團隊除了關心流量指標目前有多高，也會想知道指標的成長速度是否變快或變慢。這裡使用一個簡化的數學模型：</p>
+    <div class="formula">G(t) = ln(2t + 1)</div>
+    <p>其中 <strong>t</strong> 代表經過的天數，<strong>G(t)</strong> 是一個抽象的流量成長指標。這是用來練習微分的示範模型，不是實際訪客人數的預測公式。</p>
+    <div class="grid">
+      <div class="metric">
+        <div class="label">我們想知道</div>
+        <div class="value">G′(t)</div>
+        <div class="muted">指標的瞬間變化率</div>
+      </div>
+      <div class="metric">
+        <div class="label">分析的用途</div>
+        <div class="value">比較速度</div>
+        <div class="muted">觀察成長是否放緩</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>一、一步一步推導對數微分</h2>
+    <p>已知 <strong>G(t) = ln(2t + 1)</strong>，求它的導數。</p>
+    <div class="steps">
+      <div class="step"><div><strong>先記住公式</strong><div class="formula">d/dt [ln u] = (1/u) × (du/dt)</div></div></div>
+      <div class="step"><div><strong>找出對數裡面的函數</strong><p>令 u = 2t + 1，因此 du/dt = 2。</p></div></div>
+      <div class="step"><div><strong>套用鏈鎖律</strong><div class="formula">G′(t) = 1/(2t + 1) × 2</div></div></div>
+      <div class="step"><div><strong>整理結果</strong><div class="formula">G′(t) = 2/(2t + 1)</div><p class="muted">這個導數代表指標在某個時間點附近的瞬間變化率。</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>二、互動觀察：時間改變，變化率會如何變化？</h2>
+    <p>拖曳時間滑桿，觀察指標 G(t) 與導數 G′(t) 的數值。你會看到指標持續上升，但變化率逐漸降低。</p>
+    <div class="slider-row">
+      <label for="timeSlider"><strong>經過時間 t</strong></label>
+      <strong id="timeLabel">4 天</strong>
+    </div>
+    <input id="timeSlider" type="range" min="0" max="20" step="1" value="4" aria-label="經過的天數">
+    <div class="grid" style="margin-top:16px">
+      <div class="metric">
+        <div class="label">指標數值 G(t) = ln(2t + 1)</div>
+        <div class="value" id="gValue">2.197</div>
+      </div>
+      <div class="metric">
+        <div class="label">瞬間變化率 G′(t) = 2/(2t + 1)</div>
+        <div class="value" id="gpValue">0.222</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="chart" aria-label="指標數值與變化率圖表"></canvas></div>
+    <p class="muted">圖表中，藍線代表 G(t)，橘線代表 G′(t)。兩者使用不同的垂直尺度以方便觀察。</p>
+  </section>
+
+  <section>
+    <h2>三、互動練習</h2>
+    <p class="muted">每題選擇一個答案，再按「檢查答案」查看解析。</p>
+    <div class="quiz" data-answer="B">
+      <h3>第 1 題｜計算微分</h3>
+      <p>已知 G(t) = ln(2t + 1)，請問 G′(t) 為何？</p>
+      <label class="option"><input type="radio" name="q1" value="A"><span>A. 1/(2t + 1)</span></label>
+      <label class="option"><input type="radio" name="q1" value="B"><span>B. 2/(2t + 1)</span></label>
+      <label class="option"><input type="radio" name="q1" value="C"><span>C. ln 2</span></label>
+      <label class="option"><input type="radio" name="q1" value="D"><span>D. 2t + 1</span></label>
+      <button onclick="checkAnswer(1)">檢查答案</button>
+      <div class="feedback" id="feedback1" aria-live="polite"></div>
+    </div>
+
+    <div class="quiz" data-answer="B">
+      <h3>第 2 題｜代入特定時間</h3>
+      <p>當 t = 4 時，指標的瞬間變化率是多少？</p>
+      <label class="option"><input type="radio" name="q2" value="A"><span>A. 9</span></label>
+      <label class="option"><input type="radio" name="q2" value="B"><span>B. 2/9 ≈ 0.222</span></label>
+      <label class="option"><input type="radio" name="q2" value="C"><span>C. ln 9 ≈ 2.197</span></label>
+      <label class="option"><input type="radio" name="q2" value="D"><span>D. 1/9 ≈ 0.111</span></label>
+      <button onclick="checkAnswer(2)">檢查答案</button>
+      <div class="feedback" id="feedback2" aria-live="polite"></div>
+    </div>
+
+    <div class="quiz" data-answer="A">
+      <h3>第 3 題｜比較成長速度</h3>
+      <p>比較第 1 天與第 10 天，哪一天的指標成長速度較快？</p>
+      <label class="option"><input type="radio" name="q3" value="A"><span>A. 第 1 天，因為變化率較大</span></label>
+      <label class="option"><input type="radio" name="q3" value="B"><span>B. 第 10 天，因為經過時間較久</span></label>
+      <label class="option"><input type="radio" name="q3" value="C"><span>C. 兩天的變化率相同</span></label>
+      <label class="option"><input type="radio" name="q3" value="D"><span>D. 無法比較</span></label>
+      <button onclick="checkAnswer(3)">檢查答案</button>
+      <div class="feedback" id="feedback3" aria-live="polite"></div>
+    </div>
+    <p class="score" id="score" aria-live="polite">已完成 0 / 3 題</p>
+    <button class="secondary" onclick="resetQuiz()">重新作答</button>
+  </section>
+
+  <section>
+    <h2>四、解答與應用總結</h2>
+    <div class="steps">
+      <div class="step"><div><strong>第 1 題：B</strong><p>G′(t) = 2/(2t + 1)。使用鏈鎖律，需乘上括號內函數的微分 2。</p></div></div>
+      <div class="step"><div><strong>第 2 題：B</strong><p>G′(4) = 2/[2(4) + 1] = 2/9 ≈ 0.222 個指標單位／天。</p></div></div>
+      <div class="step"><div><strong>第 3 題：A</strong><p>G′(1) = 2/3 ≈ 0.667；G′(10) = 2/21 ≈ 0.095，所以第 1 天的變化率較大。</p></div></div>
+    </div>
+    <div class="note"><strong>重要提醒：</strong>本例的 G(t) 是簡化的指標模型。真實電商分析仍需蒐集實際流量資料，確認模型是否適用。數學模型可以幫助我們理解趨勢，但不會自動證明真實網站的流量一定如此變化。</div>
+    <p><strong>帶走的觀念：</strong>函數 G(t) 描述指標數值；導數 G′(t) 描述指標的瞬間變化率。對數微分能協助分析變化速度，這也是微積分在商業分析與資料科學中的應用之一。</p>
+  </section>
+</main>
+<footer>對數微分互動教材｜可離線開啟，無需安裝套件</footer>
+
+<script>
+  const explanations = {
+    1: {
+      correct: "推導：G′(t) = [1/(2t + 1)] × 2 = 2/(2t + 1)。對 ln(u) 微分時，要乘上內部函數 u 的導數。",
+      wrong: "再試一次。對 ln(u) 微分時，先得到 1/u，接著還要乘上 u′。本題 u = 2t + 1。"
+    },
+    2: {
+      correct: "計算：G′(4) = 2/[2(4) + 1] = 2/9 ≈ 0.222。這是第 4 天附近的瞬間變化率。",
+      wrong: "請先使用 G′(t) = 2/(2t + 1)，再將 t = 4 代入分母，計算結果。"
+    },
+    3: {
+      correct: "G′(1) = 2/3 ≈ 0.667；G′(10) = 2/21 ≈ 0.095。第 1 天的變化率較大，所以模型在第 1 天附近成長得較快。",
+      wrong: "比較兩個時間點的導數：G′(1) = 2/3，G′(10) = 2/21。導數數值較大，代表該點的瞬間變化率較大。"
+    }
+  };
+  const answers = {};
+  function checkAnswer(n) {
+    const selected = document.querySelector(`input[name="q${n}"]:checked`);
+    const box = document.getElementById(`feedback${n}`);
+    if (!selected) {
+      box.className = "feedback show incorrect";
+      box.textContent = "請先選擇一個答案，再檢查。";
+      return;
+    }
+    const correct = selected.value === document.querySelector(`.quiz:nth-of-type(${n})`)?.dataset.answer;
+    // Each quiz is located after the intro paragraph; use the selected value against the known answer key.
+    const key = {1:"B", 2:"B", 3:"A"}[n];
+    const isCorrect = selected.value === key;
+    answers[n] = isCorrect;
+    box.className = "feedback show " + (isCorrect ? "correct" : "incorrect");
+    box.textContent = (isCorrect ? "回答正確！ " : "這個答案還不正確。 ") + (isCorrect ? explanations[n].correct : explanations[n].wrong);
+    updateScore();
+  }
+  function updateScore() {
+    const done = Object.keys(answers).length;
+    const score = Object.values(answers).filter(Boolean).length;
+    document.getElementById("score").textContent = `已完成 ${done} / 3 題｜答對 ${score} 題`;
+  }
+  function resetQuiz() {
+    document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+    document.querySelectorAll(".feedback").forEach(el => { el.className = "feedback"; el.textContent = ""; });
+    Object.keys(answers).forEach(k => delete answers[k]);
+    document.getElementById("score").textContent = "已完成 0 / 3 題";
+  }
+
+  const slider = document.getElementById("timeSlider");
+  const timeLabel = document.getElementById("timeLabel");
+  const gValue = document.getElementById("gValue");
+  const gpValue = document.getElementById("gpValue");
+  const canvas = document.getElementById("chart");
+  const ctx = canvas.getContext("2d");
+  function fmt(n) { return n.toFixed(3); }
+  function updateMetrics() {
+    const t = Number(slider.value);
+    timeLabel.textContent = `${t} 天`;
+    gValue.textContent = fmt(Math.log(2 * t + 1));
+    gpValue.textContent = fmt(2 / (2 * t + 1));
+    drawChart(t);
+  }
+  function drawChart(tNow) {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const w = rect.width, h = rect.height;
+    const pad = {l: 44, r: 18, t: 20, b: 36};
+    const pw = w - pad.l - pad.r, ph = h - pad.t - pad.b;
+    ctx.clearRect(0, 0, w, h);
+    ctx.font = "12px system-ui, sans-serif";
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#dce3ed";
+    ctx.fillStyle = "#5c6878";
+    for (let i = 0; i <= 4; i++) {
+      const y = pad.t + ph * i / 4;
+      ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w-pad.r, y); ctx.stroke();
+      ctx.fillText((3 - i * 0.75).toFixed(2), 4, y + 4);
+    }
+    for (let i = 0; i <= 4; i++) {
+      const x = pad.l + pw * i / 4;
+      ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, h-pad.b); ctx.stroke();
+      ctx.fillText(String(i*5), x-4, h-12);
+    }
+    ctx.fillStyle = "#5c6878"; ctx.fillText("天數 t", w-48, h-12);
+    const xMap = t => pad.l + (t / 20) * pw;
+    const yG = val => pad.t + ph * (1 - val / 3);
+    const yD = val => pad.t + ph * (1 - val / 2);
+    function plot(fn, yMap, color) {
+      ctx.beginPath();
+      for (let i=0; i<=200; i++) {
+        const t = i/10, x=xMap(t), y=yMap(fn(t));
+        if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle = color; ctx.lineWidth = 2.6; ctx.stroke();
+    }
+    plot(t => Math.log(2*t+1), yG, "#2459c4");
+    plot(t => 2/(2*t+1), yD, "#e58a22");
+    const x = xMap(tNow);
+    ctx.setLineDash([4,4]); ctx.strokeStyle = "#68778d"; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,h-pad.b); ctx.stroke(); ctx.setLineDash([]);
+    const yg = yG(Math.log(2*tNow+1));
+    ctx.fillStyle = "#2459c4"; ctx.beginPath(); ctx.arc(x,yg,4.5,0,Math.PI*2); ctx.fill();
+    const yd = yD(2/(2*tNow+1));
+    ctx.fillStyle = "#e58a22"; ctx.beginPath(); ctx.arc(x,yd,4.5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#2459c4"; ctx.fillRect(pad.l+6,pad.t+4,10,3);
+    ctx.fillStyle = "#182230"; ctx.fillText("G(t)",pad.l+21,pad.t+10);
+    ctx.fillStyle = "#e58a22"; ctx.fillRect(pad.l+70,pad.t+4,10,3);
+    ctx.fillStyle = "#182230"; ctx.fillText("G′(t)",pad.l+85,pad.t+10);
+  }
+  slider.addEventListener("input", updateMetrics);
+  window.addEventListener("resize", updateMetrics);
+  updateMetrics();
+</script>
+</body>
+</html>
+
+
+</body>
+</html>
