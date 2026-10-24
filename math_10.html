@@ -1,0 +1,616 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+</head>
+
+<body>
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>對數微分闖關作答</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, "Microsoft JhengHei", sans-serif;
+  background: #f3f6fb;
+  color: #253047;
+  line-height: 1.7;
+}
+header {
+  background: #263d65;
+  color: white;
+  padding: 26px 16px;
+  text-align: center;
+}
+header h1 { margin: 0 0 8px; font-size: 26px; }
+header p { margin: 0; color: #e1e9f8; }
+main { max-width: 850px; margin: 24px auto; padding: 0 15px 40px; }
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px #1c31500d;
+}
+h2 { margin-top: 0; font-size: 21px; }
+.formula {
+  background: #edf3ff;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  font-size: 23px;
+  margin: 14px 0;
+}
+label { display: block; font-weight: bold; margin: 12px 0 5px; }
+input, select {
+  font: inherit;
+  padding: 10px;
+  border: 1px solid #b9c3d4;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 360px;
+  background: white;
+}
+button {
+  background: #315caa;
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 18px;
+  margin-top: 14px;
+  font-size: 15px;
+  cursor: pointer;
+}
+button:hover { background: #234782; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.feedback {
+  display: none;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+.good { display: block; background: #e8f7ed; color: #176333; }
+.bad { display: block; background: #fff0e9; color: #963b19; }
+.locked {
+  border: 2px dashed #c4ccda;
+  background: #f8f9fc;
+  border-radius: 10px;
+  padding: 16px;
+  color: #687286;
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin: 15px 0;
+}
+.metric { background: #f0f5ff; padding: 13px; border-radius: 10px; }
+.metric strong { display: block; font-size: 22px; color: #234782; }
+canvas {
+  width: 100%;
+  height: 320px;
+  display: block;
+  margin-top: 12px;
+  border: 1px solid #e0e5ee;
+  border-radius: 10px;
+}
+input[type="range"] { max-width: 100%; padding: 0; }
+.small { font-size: 13px; color: #6a7485; }
+.result-row {
+  border-bottom: 1px solid #e5eaf2;
+  padding: 10px 0;
+  overflow-wrap: anywhere;
+}
+.result-row:last-child { border-bottom: 0; }
+.success-title { color: #176333; }
+.notice {
+  background: #fff7e5;
+  border-radius: 8px;
+  padding: 12px;
+  color: #795519;
+  font-size: 14px;
+}
+footer { text-align: center; color: #758096; font-size: 13px; padding: 12px; }
+</style>
+</head>
+
+<body>
+<header>
+  <h1>對數微分：電商成長分析闖關</h1>
+  <p>請獨立完成每一關，全部完成後填寫學號並提交</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>題目情境</h2>
+    <p>假設某電商平台的成長指標如下：</p>
+    <div class="formula">G(t) = ln(2t + 1)</div>
+    <p>其中，t 代表經過的天數，G(t) 代表簡化的成長指標。</p>
+    <p id="progress"><strong>闖關進度：</strong> 0 / 4 關完成</p>
+  </section>
+
+  <!-- 第一關 -->
+  <section class="card">
+    <h2>第一關｜對數微分</h2>
+    <p>請求出 G(t) 的導數，並分別輸入答案的分子與分母。</p>
+
+    <div class="formula">
+      G'(t) =
+      <span style="display:inline-block;vertical-align:middle">
+        <span style="display:block;border-bottom:2px solid;padding:0 18px">分子</span>
+        <span style="display:block;padding:0 18px">分母</span>
+      </span>
+    </div>
+
+    <label for="numerator">分子</label>
+    <input id="numerator" autocomplete="off" placeholder="輸入分子">
+
+    <label for="denominator">分母</label>
+    <input id="denominator" autocomplete="off" placeholder="輸入分母">
+
+    <br>
+    <button onclick="checkFormula()">提交第一關</button>
+    <div id="feedback1" class="feedback" aria-live="polite"></div>
+  </section>
+
+  <!-- 第二關 -->
+  <section class="card">
+    <h2>第二關｜第 4 天的瞬時變化率</h2>
+    <div id="stage2lock" class="locked">
+      🔒 請先完成第一關。
+    </div>
+    <div id="stage2" hidden>
+      <p>請計算第 4 天的瞬時變化率，並輸入數值。</p>
+      <label for="day4">第 4 天的瞬時變化率</label>
+      <input id="day4" type="number" step="any" placeholder="輸入數值">
+      <br>
+      <button onclick="checkDay4()">提交第二關</button>
+      <div id="feedback2" class="feedback" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- 第三關 -->
+  <section class="card">
+    <h2>第三關｜調整天數並觀察曲線</h2>
+    <div id="stage3lock" class="locked">
+      🔒 請先完成第二關。
+    </div>
+    <div id="stage3" hidden>
+      <p>選擇要觀察的曲線，並調整天數，觀察曲線的變化。</p>
+
+      <label for="chartType">觀察項目</label>
+      <select id="chartType" onchange="drawChart()">
+        <option value="rate">瞬時變化率</option>
+        <option value="index">成長指標</option>
+      </select>
+
+      <label for="timeSlider">
+        觀察天數：第 <span id="timeLabel">4</span> 天
+      </label>
+      <input id="timeSlider" type="range" min="1" max="20" step="1"
+             value="4" oninput="drawChart()">
+
+      <div class="metric-grid">
+        <div class="metric">
+          <span>目前成長指標</span>
+          <strong id="currentG">—</strong>
+        </div>
+        <div class="metric">
+          <span>目前瞬時變化率</span>
+          <strong id="currentRate">—</strong>
+        </div>
+      </div>
+
+      <canvas id="chart" aria-label="成長指標與瞬時變化率曲線"></canvas>
+      <p id="chartExplanation">請觀察曲線隨時間的變化。</p>
+
+      <button onclick="finishObservation()">完成曲線觀察</button>
+      <div id="feedback3" class="feedback" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- 第四關 -->
+  <section class="card">
+    <h2>第四關｜比較第 1 天與第 10 天</h2>
+    <div id="stage4lock" class="locked">
+      🔒 請先完成第三關。
+    </div>
+
+    <div id="stage4" hidden>
+      <p>請分別計算並輸入第 1 天與第 10 天的瞬時變化率。</p>
+
+      <label for="rate1">第 1 天的瞬時變化率</label>
+      <input id="rate1" type="number" step="any" placeholder="輸入數值">
+
+      <label for="rate10">第 10 天的瞬時變化率</label>
+      <input id="rate10" type="number" step="any" placeholder="輸入數值">
+
+      <button onclick="checkComparisonValues()">提交數值</button>
+      <div id="feedback4a" class="feedback" aria-live="polite"></div>
+
+      <div id="compareQuestion" hidden>
+        <label for="faster">根據你的計算，哪一天的成長速度較快？</label>
+        <select id="faster">
+          <option value="">請選擇</option>
+          <option value="1">第 1 天</option>
+          <option value="10">第 10 天</option>
+          <option value="same">兩天相同</option>
+        </select>
+        <button onclick="checkFaster()">提交判斷</button>
+        <div id="feedback4b" class="feedback" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 學號與提交 -->
+  <section class="card" id="submission" hidden>
+    <h2>最後一步｜填寫學號並提交</h2>
+    <p>四關已完成。請輸入學號，確認後提交本次作答。</p>
+
+    <label for="studentId">學生學號</label>
+    <input id="studentId" type="text" maxlength="30"
+           autocomplete="off" placeholder="請輸入學號">
+
+    <br>
+    <button id="submitBtn" onclick="submitAnswers()">確認並提交</button>
+    <div id="submitFeedback" class="feedback" aria-live="polite"></div>
+  </section>
+
+  <!-- 完成畫面 -->
+  <section class="card" id="finish" hidden>
+    <h2 class="success-title">作答完成</h2>
+    <p>以下為本次提交的學號與作答紀錄。</p>
+    <div id="resultSummary"></div>
+    <button onclick="downloadResults()">下載作答紀錄（CSV）</button>
+    <button onclick="window.print()">列印作答紀錄</button>
+    <p class="notice">
+      本頁會在目前瀏覽器顯示作答紀錄。若要讓老師集中收到全班資料，
+      需要另外連接表單或資料庫。
+    </p>
+  </section>
+</main>
+
+<footer>對數微分互動練習</footer>
+
+<script>
+const answers = {
+  numerator: "",
+  denominator: "",
+  day4: "",
+  rate1: "",
+  rate10: "",
+  faster: "",
+  studentId: ""
+};
+
+let done1 = false;
+let done2 = false;
+let done3 = false;
+let done4 = false;
+let submitted = false;
+
+function normalize(s) {
+  return s.toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[＊*×]/g, "")
+    .replace(/−/g, "-");
+}
+
+function feedback(id, message, good) {
+  const el = document.getElementById(id);
+  el.textContent = message;
+  el.className = "feedback " + (good ? "good" : "bad");
+}
+
+function updateProgress() {
+  const count = [done1, done2, done3, done4].filter(Boolean).length;
+  document.getElementById("progress").innerHTML =
+    "<strong>闖關進度：</strong> " + count + " / 4 關完成";
+}
+
+function unlock(lockId, stageId) {
+  document.getElementById(lockId).hidden = true;
+  document.getElementById(stageId).hidden = false;
+}
+
+function closeInputs(ids) {
+  ids.forEach(id => {
+    document.getElementById(id).disabled = true;
+  });
+}
+
+function checkFormula() {
+  if (done1) return;
+
+  const n = normalize(document.getElementById("numerator").value);
+  const d = normalize(document.getElementById("denominator").value);
+
+  answers.numerator = document.getElementById("numerator").value.trim();
+  answers.denominator = document.getElementById("denominator").value.trim();
+
+  const numeratorOK = n === "2";
+  const denominatorOK = ["2t+1", "1+2t"].includes(d);
+
+  if (numeratorOK && denominatorOK) {
+    done1 = true;
+    feedback("feedback1", "第一關通過！已解鎖下一關。", true);
+    closeInputs(["numerator", "denominator"]);
+    unlock("stage2lock", "stage2");
+    updateProgress();
+  } else {
+    feedback("feedback1", "答案不正確，請重新檢查你的分子與分母。", false);
+  }
+}
+
+function near(value, target, tolerance = 0.005) {
+  return Number.isFinite(value) && Math.abs(value - target) <= tolerance;
+}
+
+function checkDay4() {
+  if (done2) return;
+
+  const raw = document.getElementById("day4").value;
+  const val = Number(raw);
+  answers.day4 = raw;
+
+  if (raw !== "" && near(val, 2 / 9)) {
+    done2 = true;
+    feedback("feedback2", "第二關通過！已解鎖曲線觀察。", true);
+    closeInputs(["day4"]);
+    unlock("stage3lock", "stage3");
+    drawChart();
+    updateProgress();
+  } else {
+    feedback("feedback2", "數值不正確，請重新檢查你的計算結果。", false);
+  }
+}
+
+function drawChart() {
+  const slider = document.getElementById("timeSlider");
+  const t = Number(slider.value);
+  document.getElementById("timeLabel").textContent = t;
+
+  const G = Math.log(2 * t + 1);
+  const rate = 2 / (2 * t + 1);
+  document.getElementById("currentG").textContent = G.toFixed(4);
+  document.getElementById("currentRate").textContent = rate.toFixed(4);
+
+  const type = document.getElementById("chartType").value;
+  const canvas = document.getElementById("chart");
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const W = Math.max(300, rect.width);
+  const H = 320;
+
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const left = 52, right = 18, top = 32, bottom = 42;
+  const plotW = W - left - right;
+  const plotH = H - top - bottom;
+
+  const values = [];
+  for (let day = 1; day <= 20; day++) {
+    values.push(type === "rate"
+      ? 2 / (2 * day + 1)
+      : Math.log(2 * day + 1));
+  }
+
+  const maxVal = Math.max(...values) * 1.12;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "#34415a";
+  ctx.textAlign = "left";
+  ctx.fillText(type === "rate" ? "瞬時變化率" : "成長指標", left, 18);
+
+  for (let i = 0; i <= 4; i++) {
+    const y = top + plotH * i / 4;
+    const val = maxVal * (1 - i / 4);
+    ctx.strokeStyle = "#e5eaf2";
+    ctx.beginPath();
+    ctx.moveTo(left, y);
+    ctx.lineTo(W - right, y);
+    ctx.stroke();
+
+    ctx.fillStyle = "#667085";
+    ctx.textAlign = "right";
+    ctx.fillText(val.toFixed(2), left - 8, y + 4);
+  }
+
+  [1, 5, 10, 15, 20].forEach(day => {
+    const x = left + ((day - 1) / 19) * plotW;
+    ctx.fillStyle = "#667085";
+    ctx.textAlign = "center";
+    ctx.fillText(day, x, H - 17);
+  });
+
+  ctx.fillText("天數", left + plotW / 2, H - 2);
+
+  ctx.beginPath();
+  values.forEach((v, i) => {
+    const x = left + (i / 19) * plotW;
+    const y = top + (1 - v / maxVal) * plotH;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = "#315caa";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  const selectedValue = type === "rate" ? rate : G;
+  const px = left + ((t - 1) / 19) * plotW;
+  const py = top + (1 - selectedValue / maxVal) * plotH;
+
+  ctx.beginPath();
+  ctx.arc(px, py, 6, 0, Math.PI * 2);
+  ctx.fillStyle = "#e27836";
+  ctx.fill();
+
+  ctx.fillStyle = "#253047";
+  ctx.textAlign = px > W - 115 ? "right" : "left";
+  ctx.fillText("第 " + t + " 天",
+    px > W - 115 ? px - 10 : px + 10,
+    Math.max(top + 12, py - 12));
+
+  document.getElementById("chartExplanation").textContent =
+    type === "rate"
+      ? "觀察瞬時變化率曲線的走向與變化。"
+      : "觀察成長指標曲線的走向與變化。";
+}
+
+function finishObservation() {
+  if (done3) return;
+
+  done3 = true;
+  feedback("feedback3", "曲線觀察已完成，請繼續第四關。", true);
+  unlock("stage4lock", "stage4");
+  updateProgress();
+}
+
+function checkComparisonValues() {
+  if (done4) return;
+
+  const raw1 = document.getElementById("rate1").value;
+  const raw10 = document.getElementById("rate10").value;
+  const v1 = Number(raw1);
+  const v10 = Number(raw10);
+
+  answers.rate1 = raw1;
+  answers.rate10 = raw10;
+
+  if (raw1 !== "" && raw10 !== "" &&
+      near(v1, 2 / 3) && near(v10, 2 / 21)) {
+    feedback("feedback4a", "數值正確！請繼續完成最後的比較判斷。", true);
+    closeInputs(["rate1", "rate10"]);
+    document.getElementById("compareQuestion").hidden = false;
+  } else {
+    feedback("feedback4a", "至少有一個數值不正確，請重新檢查兩題的計算。", false);
+    document.getElementById("compareQuestion").hidden = true;
+  }
+}
+
+function checkFaster() {
+  if (done4) return;
+
+  const answer = document.getElementById("faster").value;
+  answers.faster = answer;
+
+  if (answer === "1") {
+    done4 = true;
+    feedback("feedback4b", "第四關通過！請填寫學號以提交作答。", true);
+    closeInputs(["faster"]);
+    document.getElementById("submission").hidden = false;
+    updateProgress();
+    document.getElementById("submission").scrollIntoView({
+      behavior: "smooth", block: "start"
+    });
+  } else {
+    feedback("feedback4b", "判斷不正確，請重新比較你輸入的兩個數值。", false);
+  }
+}
+
+function submitAnswers() {
+  if (submitted) return;
+
+  if (!(done1 && done2 && done3 && done4)) {
+    feedback("submitFeedback", "請先完成所有關卡。", false);
+    return;
+  }
+
+  const id = document.getElementById("studentId").value.trim();
+
+  if (!id) {
+    feedback("submitFeedback", "請輸入學號後再提交。", false);
+    document.getElementById("studentId").focus();
+    return;
+  }
+
+  answers.studentId = id;
+  submitted = true;
+
+  document.getElementById("studentId").disabled = true;
+  document.getElementById("submitBtn").disabled = true;
+
+  const result = document.getElementById("resultSummary");
+  result.innerHTML = "";
+
+  const rows = [
+    ["學號", answers.studentId],
+    ["第一關：分子", answers.numerator],
+    ["第一關：分母", answers.denominator],
+    ["第二關：第 4 天的瞬時變化率", answers.day4],
+    ["第四關：第 1 天的瞬時變化率", answers.rate1],
+    ["第四關：第 10 天的瞬時變化率", answers.rate10],
+    ["成長較快的日期", answers.faster === "1" ? "第 1 天" : "第 10 天"],
+    ["完成狀態", "四關全部完成"]
+  ];
+
+  rows.forEach(([label, value]) => {
+    const row = document.createElement("div");
+    row.className = "result-row";
+
+    const strong = document.createElement("strong");
+    strong.textContent = label + "：";
+
+    const span = document.createElement("span");
+    span.textContent = " " + value;
+
+    row.appendChild(strong);
+    row.appendChild(span);
+    result.appendChild(row);
+  });
+
+  document.getElementById("finish").hidden = false;
+  document.getElementById("finish").scrollIntoView({
+    behavior: "smooth", block: "start"
+  });
+}
+
+function downloadResults() {
+  if (!submitted) return;
+
+  const rows = [
+    ["項目", "作答內容"],
+    ["學號", answers.studentId],
+    ["第一關：分子", answers.numerator],
+    ["第一關：分母", answers.denominator],
+    ["第二關：第 4 天的瞬時變化率", answers.day4],
+    ["第四關：第 1 天的瞬時變化率", answers.rate1],
+    ["第四關：第 10 天的瞬時變化率", answers.rate10],
+    ["成長較快的日期", answers.faster === "1" ? "第 1 天" : "第 10 天"],
+    ["完成狀態", "四關全部完成"]
+  ];
+
+  const csv = "\uFEFF" + rows.map(row =>
+    row.map(cell => '"' + String(cell).replace(/"/g, '""') + '"').join(",")
+  ).join("\r\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "對數微分作答_" +
+    answers.studentId.replace(/[\\/:*?"<>|]/g, "_") + ".csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+window.addEventListener("resize", () => {
+  if (!document.getElementById("stage3").hidden) drawChart();
+});
+</script>
+</body>
+</html>
+
+</body>
+</html>
